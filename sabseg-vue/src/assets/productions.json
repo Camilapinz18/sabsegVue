@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "service": "Municipal waste",
+      "info": "Hazardous mutation",
+      "image": "../../src/assets/images/disc1.png"
+    },
+    {
+      "id": 2,
+      "service": "Wongtuek Band",
+      "info": "Old Town Vol. 1",
+      "image": "../../src/assets/images/disc2.jpeg"
+    },
+    {
+      "id": 3,
+      "service": "Luca Robinson",
+      "info": "The forest",
+      "image": "../../src/assets/images/disc3.jpeg"
+    },
+    {
+      "id": 4,
+      "service": "Hands in hell",
+      "info": "Help grips",
+      "image": "../../src/assets/images/disc4.jpeg"
+    }
+  ]
+  

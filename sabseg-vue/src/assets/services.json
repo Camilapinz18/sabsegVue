@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "service": "Salas de ensayo",
+    "info": "Nuestro servicio de salas de ensayo ofrece un espacio seguro y equipado para que músicos de todos los niveles puedan practicar y perfeccionar sus habilidades.",
+    "image": "../../src/assets/images/ser1.jpg"
+  },
+  {
+    "id": 2,
+    "service": "Pre-producción musical",
+    "info": "Nuestro servicio de pre-producción musical te ofrece todo lo que necesitas para planificar y preparar tu proyecto musical antes de entrar al estudio de grabación..",
+    "image": "../../src/assets/images/ser2.jpg"
+  },
+  {
+    "id": 3,
+    "service": "Producción musical",
+    "info": "Nuestro servicio de producción musical cuenta con un equipo de expertos y tecnología de vanguardia para llevar tus ideas musicales al siguiente nivel y crear una grabación de alta calidad.",
+    "image": "../../src/assets/images/ser3.jpg"
+  },
+  {
+    "id": 4,
+    "service": "Estudio de grabación",
+    "info": "Nuestro estudio de grabación ofrece un espacio acústicamente diseñado y equipado con tecnología de última generación para ayudarte a crear grabaciones profesionales con la mejor calidad de sonido posible.",
+    "image": "../../src/assets/images/ser4.jpg"
+  },
+  {
+    "id": 5,
+    "service": "Alquiler de sonido",
+    "info": "Nuestro servicio de alquiler de equipos de audio cuenta con una amplia variedad de equipos de alta calidad para que puedas llevar tu evento o producción musical al siguiente nivel.",
+    "image": "../../src/assets/images/ser5.jpg"
+  },
+  {
+    "id": 6,
+    "service": "Tarima",
+    "info": "Nuestro servicio de tarima en vivo ofrece una plataforma robusta y segura para que puedas presentar tu música en vivo con una excelente calidad de sonido y un aspecto profesional.",
+    "image": "../../src/assets/images/ser6.jpg"
+  }
+]

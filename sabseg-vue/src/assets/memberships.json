@@ -1,0 +1,54 @@
+[
+    {
+      "id": 1,
+      "name": "Crew Member",
+      "info": "As a crew member, you'll have access to our club facilities and be able to participate in club events and activities. This membership level is designed for those who are just starting out in the world of sailing and want to learn and develop their skills.",
+      "benefits":[
+        "Access to the club facilities",
+        "Club events and activities",
+        "Sailing lessons and workshops",
+        "Access to junior lever yachts",
+        "Discounts on club merchandise and events"
+      ],
+      "image": "../../src/assets/images/crew-y.jpg",
+      "yachts":20,
+      "courses":10,
+      "members":100,
+      "cost":"$150/month"
+    },
+    {
+        "id": 2,
+        "name": "Cruise Member",
+        "info": "As a cruise member, you'll have all the benefits of a crew member, plus additional perks that are designed for those who want to explore the waterways and coastal areas near our club.",
+        "benefits":[
+          "All the benefits of a Crew member",
+          "Discounted rates for boat rentals and charters",
+          "Access to navigational resources",
+          "Access to mid level yachts",
+          "invitations to exclusive club cruises and events"
+        ],
+        "image": "../../src/assets/images/cruise-y.jpg",
+        "yachts":15,
+        "courses":15,
+        "members":230,
+        "cost":"$200/month"
+    },
+    {
+        "id": 3,
+        "name": "Honorary Member",
+        "info": "As an honor member, you'll have access to the highest level of benefits and privileges that our club has to offer. This membership level is designed for those who are passionate about sailing and want to immerse themselves in the yacht club experience.",
+        "benefits":[
+          "All the benefits of a Cruise member",
+          "Access to exclusive member-only events",
+          "Priority registration for club activities and events",
+          "Access to the club's private dining room",
+          "Access to senior lever yachts"
+        ],
+        "image": "../../src/assets/images/honor-y.jpg",
+        "yachts":25,
+        "courses":20,
+        "members":350,
+        "cost":"$250/month"
+    }
+  ]
+  
