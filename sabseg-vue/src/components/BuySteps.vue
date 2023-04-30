@@ -3,16 +3,16 @@
     <div class="main-buy-cont">
       <div class="steps-cont">
         <n-steps v-model:current="current">
-          <n-step title="Membership" description="Select the membership you would like to purchase."
+          <n-step title="Elige el servicio" description="Selecciona el servicio que quieres reservar"
             @click="setIsMembership" />
-          <n-step title="Payment method" description="Select the payment method to use" @click="setIsPaymentMethod" />
-          <n-step title="Payment confirmation" description="Here come old flat top He come grooving up slowly"
-            @click="setIsConfirmation" />
+          <n-step title="Reserva tu servicio" description="Selecciona los detalles de tu reserva"
+            @click="setIsPaymentMethod" />
+          <n-step title="Confirma tu reserva" description="Revisa y confirma tu reservación" @click="setIsConfirmation" />
         </n-steps>
       </div>
 
       <div class="radios" v-if="isMembership">
-        <strong>Select the membership you would like to purchase:</strong>
+        <strong>Selecciona el servicio que quieres reservar:</strong>
         <n-radio-group v-model:value="membershipSelected" name="radiogroup">
           <n-space>
             <n-radio class="radio" v-for="membership in memberships" :key="membership.value" :value="membership.value"
@@ -22,7 +22,7 @@
       </div>
 
       <div class="payment-method" v-if="isPaymentMethod">
-        <n-collapse default-expanded-names="1" accordion>
+        <!-- <n-collapse default-expanded-names="1" accordion>
           <n-collapse-item title="Credit card" name="1">
             <div>
               <n-input v-model:value="cardholderName" type="text" placeholder="Cardholder Name" />
@@ -54,7 +54,7 @@
 
             </div>
           </n-collapse-item>
-        </n-collapse>
+        </n-collapse> -->
 
       </div>
 
@@ -62,33 +62,28 @@
       <div v-if="isConfirmation">
         <n-list class="profile-info" hoverable clickable>
           <n-list-item>
-            <n-thing title="Membership" content-style="margin-top: 10px;">
-              <span>Crew Member</span>
+            <n-thing title="Servicio reservado" content-style="margin-top: 10px;">
+              <span>Sala de ensayo</span>
             </n-thing>
           </n-list-item>
 
           <n-list-item>
-            <n-thing title="Payment Method" content-style="margin-top: 10px;">
-              <span>credit card</span>
+            <n-thing title="Sala" content-style="margin-top: 10px;">
+              <span>Sala 05</span>
             </n-thing>
           </n-list-item>
 
           <n-list-item>
-            <n-thing title="Purchase date" content-style="margin-top: 10px;">
-              <span>02/02/2023</span>
-            </n-thing>
-          </n-list-item>
-
-          <n-list-item>
-            <n-thing title="Status" content-style="margin-top: 10px;">
-              <span>Successfully acquired</span>
+            <n-thing title="Fecha" content-style="margin-top: 10px;">
+              <span>02/02/2023 03:00 p.m - 05:00 p.m</span>
             </n-thing>
           </n-list-item>
 
         </n-list>
 
-        <n-button @click="" type="info">
-          Confirm data
+        <n-button color="#0d0378">
+          Confirmar reserva
+
         </n-button>
 
 
@@ -100,7 +95,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { useDialog } from 'naive-ui'
-import Memberships from '../components/Memberships.vue'
+
 
 const current = ref(0);
 const membershipSelected = ref(null);
@@ -166,16 +161,16 @@ function pay() {
 
 const memberships = [
   {
-    value: "crew",
-    label: "Crew Member"
+    value: "sala_ensayo",
+    label: "Sala de ensayo"
   },
   {
-    value: "cruise",
-    label: "Cruise Member"
+    value: "estudio_grabacion",
+    label: "Estudio de grabación"
   },
   {
-    value: "honor",
-    label: "Honorable Member"
+    value: "alquiler_sonido",
+    label: "Alquiler de sonido"
   }
 ].map((s) => {
   s.value = s.value.toLowerCase();

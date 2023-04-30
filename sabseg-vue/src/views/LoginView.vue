@@ -12,37 +12,44 @@ import { RouterLink } from 'vue-router'
                 <n-card class="tab">
                     <n-tabs class="card-tabs" default-value="signin" size="large" animated style="margin: 0 -4px"
                         pane-style="padding-left: 4px; padding-right: 4px; box-sizing: border-box;">
-                        <n-tab-pane name="signin" tab="Sign in">
+                        <n-tab-pane name="signin" tab="Iniciar sesión">
                             <n-form>
-                                <n-form-item-row label="Username">
+                                <n-form-item-row label="Email">
                                     <n-input />
                                 </n-form-item-row>
-                                <n-form-item-row label="Password">
+                                <n-form-item-row label="Contraseña">
                                     <n-input />
                                 </n-form-item-row>
                             </n-form>
-                            <n-button type="info" block secondary strong>
-                                <RouterLink to="/account">Sign in</RouterLink>
-                            </n-button>
+
+                            <RouterLink to="/account"><n-button color="#0d0378">
+                                    Iniciar sesión
+
+                                </n-button></RouterLink>
+
                         </n-tab-pane>
-                        <n-tab-pane name="signup" tab="Sign up">
+                        <n-tab-pane name="signup" tab="Registrarse">
                             <n-form>
-                                <n-form-item-row label="Full name">
+                                <n-form-item-row label="Nombre completo">
                                     <n-input />
                                 </n-form-item-row>
-                                <n-form-item-row label="Password">
+                                <n-form-item-row label="Email">
                                     <n-input />
                                 </n-form-item-row>
-                                <n-form-item-row label="Phone">
+                                <n-form-item-row label="Contraseña">
                                     <n-input />
                                 </n-form-item-row>
-                                <n-form-item-row label="Address">
+                                <n-form-item-row label="Confirme contraseña">
                                     <n-input />
                                 </n-form-item-row>
+
                             </n-form>
-                            <n-button type="info" block secondary strong>
-                                <RouterLink to="/account">Sign up</RouterLink>
-                            </n-button>
+
+                            <RouterLink to="/account"><n-button color="#0d0378">
+                                    Registrarse
+
+                                </n-button></RouterLink>
+
                         </n-tab-pane>
                     </n-tabs>
                 </n-card>

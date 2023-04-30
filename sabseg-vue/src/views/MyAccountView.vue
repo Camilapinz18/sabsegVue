@@ -43,9 +43,9 @@ onMounted(() => checkIfUserHasMembership())
     <div class="bg-cont">
         <div class="main-cont">
 
-            <n-card title="My account" style="margin-bottom: 16px">
+            <n-card title="Mi cuenta" style="margin-bottom: 16px">
                 <n-tabs default-value="profile" justify-content="space-evenly" type="line">
-                    <n-tab-pane name="profile" tab="My profile">
+                    <n-tab-pane name="profile" tab="Mi perfil">
                         <div class="account-cont">
                             <div class="img-cont">
                                 <img class="profile-img" src="../assets/images/profile.jpg" />
@@ -55,13 +55,15 @@ onMounted(() => checkIfUserHasMembership())
                             </div>
                         </div>
                     </n-tab-pane>
-                    <n-tab-pane name="membership" tab="My membership">
+                    <n-tab-pane name="membership" tab="Mis reservaciones">
                         <div class="membership-cont" v-if="!hasMembership">
-                            <n-alert title="Membership not found" type="info">
-                                It seems like you dont have a membership yet. Purchase one now!
+                            <n-alert title="Aún no cuentas con reservas!" type="info">
+                                Parece que aún no has realizado ninguna reservación. Reserva ahora!
                             </n-alert>
-                            <n-button @click="purchaseMembership" type="info">
-                                Purchase my membership!
+
+                            <n-button @click="purchaseMembership" color="#0d0378">
+                                Reservar
+
                             </n-button>
                         </div>
                         <div v-if="showBuyStepsRef">
@@ -70,30 +72,27 @@ onMounted(() => checkIfUserHasMembership())
                         <div v-if="hasMembership">
                             <div class="account-cont">
                                 <div class="img-cont">
-                                    <img class="profile-img" src="../assets/images/crew-y-s.jpg" />
+                                    <img class="profile-img" src="../assets/images/ser5.jpg" />
                                 </div>
                                 <div class="account-info">
                                     <n-list hoverable clickable>
                                         <n-list-item>
-                                            <n-thing title="Membership" content-style="margin-top: 10px;">
-                                                <span>Crew Member</span>
+                                            <n-thing title="Reservas" content-style="margin-top: 10px;">
+                                                <span>Sala de ensayo 05</span>
                                             </n-thing>
                                         </n-list-item>
 
                                         <n-list-item>
-                                            <n-thing title="Purchase date" content-style="margin-top: 10px;">
+                                            <n-thing title="Fecha" content-style="margin-top: 10px;">
                                                 <span>02/02/23</span>
                                             </n-thing>
                                         </n-list-item>
 
                                         <n-list-item>
-                                            <n-thing title="Expiration date" content-style="margin-top: 10px;">
-                                                <span>02/03/23</span>
+                                            <n-thing title="Horario" content-style="margin-top: 10px;">
+                                                <span>03:00 p.m - 05:00 p.m</span>
                                             </n-thing>
                                         </n-list-item>
-
-
-
                                     </n-list>
 
                                 </div>
@@ -104,10 +103,10 @@ onMounted(() => checkIfUserHasMembership())
                     </n-tab-pane>
 
                 </n-tabs>
-              
+
             </n-card>
             <n-button type="error">
-                    <RouterLink to="/">Logout</RouterLink> 
+                <RouterLink to="/">Cerrar sesion</RouterLink>
             </n-button>
         </div>
 

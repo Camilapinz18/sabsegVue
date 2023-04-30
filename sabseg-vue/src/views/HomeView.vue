@@ -4,7 +4,6 @@ import Header from '../components/Header.vue';
 import Gallery from '../components/Gallery.vue';
 import Services from '../components/Services.vue';
 import Contact from '../components/Contact.vue';
-import Memberships from '../components/Memberships.vue';
 import Productions from '../components/Productions.vue'
 import Footer from '../components/Footer.vue';
 
