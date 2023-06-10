@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
 import App from '../App.vue'
 import MyAccountView from '../views/MyAccountView.vue'
+import GenericView from '../views/GenericView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +22,11 @@ const router = createRouter({
       path: '/account',
       name: 'account',
       component: MyAccountView
+    },
+    {
+      path: '/generic',
+      name: 'generic',
+      component: GenericView
     }
   ]
 })

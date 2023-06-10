@@ -29,7 +29,6 @@ import { RouterLink } from 'vue-router'
                     <n-space>
                         <n-button color="#0d0378">
                             Login
-
                         </n-button>
                     </n-space>
                 </RouterLink>

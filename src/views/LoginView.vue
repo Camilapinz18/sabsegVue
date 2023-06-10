@@ -1,12 +1,9 @@
 <script setup>
-//https://vuejs.org/examples/#crud
-import { ref, reactive, computed, watch } from 'vue'
-import axios from 'axios'
+import { ref, reactive } from 'vue';
+import axios from 'axios';
+import { useRouter } from 'vue-router';
 
-// const names = reactive(['Emil, Hans', 'Mustermann, Max', 'Tisch, Roman'])
-// const selected = ref('')
-// const prefix = ref('')
-
+const router = useRouter();
 
 const signUp = reactive({
   last: '',
@@ -15,59 +12,18 @@ const signUp = reactive({
   email: '',
   password: '',
   confirmPassword: ''
-})
+});
 
 const login = reactive({
   email: '',
   password: ''
-})
+});
 
-// const filteredNames = computed(() =>
-//   names.filter((n) =>
-//     n.toLowerCase().startsWith(prefix.value.toLowerCase())
-//   )
-// )
-
-// watch(selected, (name) => {
-//   ;[last.value, first.value] = name.split(', ')
-// })
-
-// function create() {
-//   console.log("IMPRIMIR", signUp.last, signUp.first, signUp.phone, signUp.email, signUp.password, signUp.confirmPassword)
-//   if (hasValidInput()) {
-//     const fullName = `${signUp.last}, ${signUp.first}`
-//     if (!names.includes(fullName)) {
-//       names.push(fullName)
-//       signUp.first = signUp.last = ''
-//     }
-//   }
-// }
-
-// function update() {
-//   if (hasValidInput() && selected.value) {
-//     const i = names.indexOf(selected.value)
-//     names[i] = selected.value = `${last.value}, ${first.value}`
-//   }
-// }
-
-// function del() {
-//   if (selected.value) {
-//     const i = names.indexOf(selected.value)
-//     names.splice(i, 1)
-//     selected.value = first.value = last.value = ''
-//   }
-// }
-
-// function hasValidInput() {
-//   return first.value.trim() && last.value.trim()
-// }
-
-//------------------------//
 
 
 // Sign-in user
 const signInUser = () => {
-  console.log("LOGIN", login)
+  console.log("LOGIN", login);
   axios
     .post('api_url/signin', login)
     .then(response => {
@@ -82,12 +38,14 @@ const signInUser = () => {
 
 // Register user
 const registerUser = () => {
-  console.log("IMPRIMIR", signUp)
+  console.log("IMPRIMIR", signUp);
   axios
     .post('http://localhost:8085/api/v1/customers', signUp)
     .then(response => {
       // Handle the response
       console.log(response.data);
+      alert(response.data);
+      router.push('/generic'); // Use router.push to navigate to '/account'
     })
     .catch(error => {
       // Handle any errors
