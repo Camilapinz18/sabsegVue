@@ -1,78 +1,75 @@
 <script setup>
+//https://vuejs.org/examples/#crud
 import { ref, reactive, computed, watch } from 'vue'
+import axios from 'axios'
 
-const names = reactive(['Emil, Hans', 'Mustermann, Max', 'Tisch, Roman'])
-const selected = ref('')
-const prefix = ref('')
-const first = ref('')
-const last = ref('')
-const phone = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const prueba = ref('')
-const value = ref(null);
+// const names = reactive(['Emil, Hans', 'Mustermann, Max', 'Tisch, Roman'])
+// const selected = ref('')
+// const prefix = ref('')
 
-const filteredNames = computed(() =>
-  names.filter((n) =>
-    n.toLowerCase().startsWith(prefix.value.toLowerCase())
-  )
-)
 
-watch(selected, (name) => {
-  ;[last.value, first.value] = name.split(', ')
-})
-
-function create() {
-  console.log("IMPRIMIR", last.value, first.value, phone.value, email.value, password.value, confirmPassword.value)
-  if (hasValidInput()) {
-    const fullName = `${last.value}, ${first.value}`
-    if (!names.includes(fullName)) {
-      names.push(fullName)
-      first.value = last.value = ''
-    }
-  }
-}
-
-function update() {
-  if (hasValidInput() && selected.value) {
-    const i = names.indexOf(selected.value)
-    names[i] = selected.value = `${last.value}, ${first.value}`
-  }
-}
-
-function del() {
-  if (selected.value) {
-    const i = names.indexOf(selected.value)
-    names.splice(i, 1)
-    selected.value = first.value = last.value = ''
-  }
-}
-
-function hasValidInput() {
-  return first.value.trim() && last.value.trim()
-}
-
-//------------------------//
-
-const signIn = {
-  email: '',
-  password: '',
-};
-
-const signUp = {
-  name: '',
-  surname: '',
+const signUp = reactive({
+  last: '',
+  first: '',
   phone: '',
   email: '',
   password: '',
-  confirmPassword: '',
-};
+  confirmPassword: ''
+})
+
+const login = reactive({
+  email: '',
+  password: ''
+})
+
+// const filteredNames = computed(() =>
+//   names.filter((n) =>
+//     n.toLowerCase().startsWith(prefix.value.toLowerCase())
+//   )
+// )
+
+// watch(selected, (name) => {
+//   ;[last.value, first.value] = name.split(', ')
+// })
+
+// function create() {
+//   console.log("IMPRIMIR", signUp.last, signUp.first, signUp.phone, signUp.email, signUp.password, signUp.confirmPassword)
+//   if (hasValidInput()) {
+//     const fullName = `${signUp.last}, ${signUp.first}`
+//     if (!names.includes(fullName)) {
+//       names.push(fullName)
+//       signUp.first = signUp.last = ''
+//     }
+//   }
+// }
+
+// function update() {
+//   if (hasValidInput() && selected.value) {
+//     const i = names.indexOf(selected.value)
+//     names[i] = selected.value = `${last.value}, ${first.value}`
+//   }
+// }
+
+// function del() {
+//   if (selected.value) {
+//     const i = names.indexOf(selected.value)
+//     names.splice(i, 1)
+//     selected.value = first.value = last.value = ''
+//   }
+// }
+
+// function hasValidInput() {
+//   return first.value.trim() && last.value.trim()
+// }
+
+//------------------------//
+
 
 // Sign-in user
 const signInUser = () => {
+  console.log("LOGIN", login)
   axios
-    .post('api_url/signin', signIn)
+    .post('api_url/signin', login)
     .then(response => {
       // Handle the response
       console.log(response.data);
@@ -85,7 +82,7 @@ const signInUser = () => {
 
 // Register user
 const registerUser = () => {
-  console.log("IMPRIMIR", signUp.name)
+  console.log("IMPRIMIR", signUp)
   axios
     .post('http://localhost:8085/api/v1/customers', signUp)
     .then(response => {
@@ -99,12 +96,6 @@ const registerUser = () => {
 };
 </script>
 
-
-
-
-
-
-
 <template>
   <div class="bg-cont">
     <div class="login-cont">
@@ -117,10 +108,10 @@ const registerUser = () => {
             <n-tab-pane name="signin" tab="Iniciar sesión">
               <n-form>
                 <n-form-item-row label="Email">
-                  <n-input v-model="signIn.email" />
+                  <n-input v-model:value="login.email" />
                 </n-form-item-row>
                 <n-form-item-row label="Contraseña">
-                  <n-input v-model="signIn.password" type="password" />
+                  <n-input v-model:value="login.password" />
                 </n-form-item-row>
               </n-form>
 
@@ -131,26 +122,26 @@ const registerUser = () => {
             <n-tab-pane name="signup" tab="Registrarse">
               <n-form>
                 <n-form-item-row label="Nombres">
-                  <n-input v-model:value="first" />
+                  <n-input v-model:value="signUp.first" />
                 </n-form-item-row>
                 <n-form-item-row label="Apellidos">
-                  <n-input v-model:value="last" />
+                  <n-input v-model:value="signUp.last" />
                 </n-form-item-row>
                 <n-form-item-row label="Teléfono">
-                  <n-input v-model:value="phone" />
+                  <n-input v-model:value="signUp.phone" />
                 </n-form-item-row>
                 <n-form-item-row label="Email">
-                  <n-input v-model:value="email" />
+                  <n-input v-model:value="signUp.email" />
                 </n-form-item-row>
                 <n-form-item-row label="Contraseña">
-                  <n-input v-model:value="password" type="password" />
+                  <n-input v-model:value="signUp.password" type="password" />
                 </n-form-item-row>
                 <n-form-item-row label="Confirme contraseña">
-                  <n-input v-model:value="confirmPassword" type="password" />
+                  <n-input v-model:value="signUp.confirmPassword" type="password" />
                 </n-form-item-row>
               </n-form>
 
-              <n-button color="#0d0378" @click="create">
+              <n-button color="#0d0378" @click="registerUser">
                 Registrarse
               </n-button>
             </n-tab-pane>
