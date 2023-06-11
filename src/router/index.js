@@ -137,6 +137,16 @@ const router = createRouter({
                     component: () => import('@/views/pages/Crud.vue')
                 },
                 {
+                    path: '/pages/users',
+                    name: 'users',
+                    component: () => import('@/views/pages/Users.vue')
+                },
+                {
+                    path: '/pages/equipment',
+                    name: 'equipment',
+                    component: () => import('@/views/pages/Equipment.vue')
+                },
+                {
                     path: '/documentation',
                     name: 'documentation',
                     component: () => import('@/views/utilities/Documentation.vue')
@@ -158,6 +168,11 @@ const router = createRouter({
             path: '/auth/login',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
+        },
+        {
+            path: '/auth/signup',
+            name: 'signup',
+            component: () => import('@/views/pages/auth/Signup.vue')
         },
         {
             path: '/auth/access',

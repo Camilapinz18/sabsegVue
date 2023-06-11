@@ -130,7 +130,7 @@ const confirm = (event) => {
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" @click="closeConfirmation" class="p-button-text" />
-                        <Button label="Yes" icon="pi pi-check" @click="closeConfirmation" class="p-button-text" autofocus />
+                        <Button label="Si" icon="pi pi-check" @click="closeConfirmation" class="p-button-text" autofocus />
                     </template>
                 </Dialog>
             </div>
