@@ -52,27 +52,29 @@ const hideDialog = () => {
     productDialog.value = false;
     submitted.value = false;
 };
+const updateUser = () => {
+    submitted.value = true;
 
-const saveProduct = () => {
-    //console.log("product", product.value)
-    // submitted.value = true;
-    // if (product.value.name && product.value.name.trim() && product.value.price) {
-    //     if (product.value.id) {
-    //         product.value.inventoryStatus = product.value.inventoryStatus.value ? product.value.inventoryStatus.value : product.value.inventoryStatus;
-    //         products.value[findIndexById(product.value.id)] = product.value;
-    //         toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-    //     } else {
-    //         product.value.id = createId();
-    //         product.value.code = createId();
-    //         product.value.image = 'product-placeholder.svg';
-    //         product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
-    //         products.value.push(product.value);
-    //         toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-    //     }
-    //     productDialog.value = false;
-    //     product.value = {};
-    // }
+    if (product.value.id) {
+        const update_data = { // Declare the update_data variable
+            name: product.value.name,
+            surname: product.value.surname,
+            phone: product.value.phone
+        }
+
+        axios.put(`http://localhost:8085/api/v1/users/${product.value.id}`, update_data)
+            .then(response => {
+                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Usuario actualizado correctamente', life: 3000 });
+                products.value[findIndexById(product.value.id)] = product.value;
+                productDialog.value = false;
+                product.value = {};
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
 };
+
 
 const editProduct = (editProduct) => {
     product.value = { ...editProduct };
@@ -109,23 +111,8 @@ const findIndexById = (id) => {
     return index;
 };
 
-const createId = () => {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 5; i++) {
-        id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-};
-
-const exportCSV = () => {
-    dt.value.exportCSV();
-};
-
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
-
-
 };
 const deleteSelectedUsers = () => {
     selectedProducts.value.forEach((product) => {
@@ -144,8 +131,6 @@ const deleteSelectedUsers = () => {
                 console.error(error);
             });
     });
-
-
 };
 
 const initFilters = () => {
@@ -163,16 +148,12 @@ const initFilters = () => {
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
-                            <!-- <Button label="Añadir" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" /> -->
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
-                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
-                            class="mr-2 inline-block" />
-                        <Button label="Export" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)" /> -->
                     </template>
                 </Toolbar>
 
@@ -252,75 +233,21 @@ const initFilters = () => {
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label for="name">Apellidos</label>
-                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.name }" />
-                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
+                        <label for="surname">Apellidos</label>
+                        <InputText id="surname" v-model.trim="product.surname" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.surname }" />
+                        <small class="p-invalid" v-if="submitted && !product.surname">Name is required.</small>
                     </div>
                     <div class="field">
-                        <label for="description">Description</label>
-                        <Textarea id="description" v-model="product.description" required="true" rows="3" cols="20" />
+                        <label for="phone">Teléfono</label>
+                        <InputText id="phone" v-model.trim="product.phone" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.phone }" />
+                        <small class="p-invalid" v-if="submitted && !product.phone">Name is required.</small>
                     </div>
 
-                    <div class="field">
-                        <label for="inventoryStatus" class="mb-3">Inventory Status</label>
-                        <Dropdown id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
-                            optionLabel="label" placeholder="Select a Status">
-                            <template #value="slotProps">
-                                <div v-if="slotProps.value && slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label
-                                    }}</span>
-                                </div>
-                                <div v-else-if="slotProps.value && !slotProps.value.value">
-                                    <span :class="'product-badge status-' + slotProps.value.toLowerCase()">{{
-                                        slotProps.value }}</span>
-                                </div>
-                                <span v-else>
-                                    {{ slotProps.placeholder }}
-                                </span>
-                            </template>
-                        </Dropdown>
-                    </div>
-
-                    <div class="field">
-                        <label class="mb-3">Category</label>
-                        <div class="formgrid grid">
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category1" name="category" value="Accessories"
-                                    v-model="product.category" />
-                                <label for="category1">Accessories</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category2" name="category" value="Clothing" v-model="product.category" />
-                                <label for="category2">Clothing</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category3" name="category" value="Electronics"
-                                    v-model="product.category" />
-                                <label for="category3">Electronics</label>
-                            </div>
-                            <div class="field-radiobutton col-6">
-                                <RadioButton id="category4" name="category" value="Fitness" v-model="product.category" />
-                                <label for="category4">Fitness</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <label for="price">Price</label>
-                            <InputNumber id="price" v-model="product.price" mode="currency" currency="USD" locale="en-US"
-                                :class="{ 'p-invalid': submitted && !product.price }" :required="true" />
-                            <small class="p-invalid" v-if="submitted && !product.price">Price is required.</small>
-                        </div>
-                        <div class="field col">
-                            <label for="quantity">Quantity</label>
-                            <InputNumber id="quantity" v-model="product.quantity" integeronly />
-                        </div>
-                    </div>
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveProduct" />
+                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateUser" />
                     </template>
                 </Dialog>
 
