@@ -25,7 +25,7 @@ import { RouterLink } from 'vue-router'
                 Contacto
             </n-tag>
             <n-tag v-model:checked="checked" checkable>
-                <RouterLink to="/login">
+                <RouterLink to="/auth/login">
                     <n-space>
                         <n-button color="#0d0378">
                             Login
