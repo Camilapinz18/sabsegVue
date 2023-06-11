@@ -54,7 +54,7 @@ const hideDialog = () => {
 };
 
 const saveProduct = () => {
-    console.log("product", product.value)
+    //console.log("product", product.value)
     // submitted.value = true;
     // if (product.value.name && product.value.name.trim() && product.value.price) {
     //     if (product.value.id) {
@@ -76,7 +76,6 @@ const saveProduct = () => {
 
 const editProduct = (editProduct) => {
     product.value = { ...editProduct };
-    console.log(product);
     productDialog.value = true;
 };
 
@@ -87,10 +86,17 @@ const confirmDeleteProduct = (editProduct) => {
 
 const deleteProduct = () => {
     products.value = products.value.filter((val) => val.id !== product.value.id);
-    deleteProductDialog.value = false;
-    product.value = {};
-    toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-};
+
+    axios.delete(`http://localhost:8085/api/v1/users/${product.value.id}`)
+        .then(response => {
+            deleteProductDialog.value = false;
+            product.value = {};
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
 
 const findIndexById = (id) => {
     let index = -1;
@@ -118,12 +124,28 @@ const exportCSV = () => {
 
 const confirmDeleteSelected = () => {
     deleteProductsDialog.value = true;
+
+
 };
-const deleteSelectedProducts = () => {
-    products.value = products.value.filter((val) => !selectedProducts.value.includes(val));
-    deleteProductsDialog.value = false;
-    selectedProducts.value = null;
-    toast.add({ severity: 'success', summary: 'Correcto', detail: 'Usuarios eliminados', life: 3000 });
+const deleteSelectedUsers = () => {
+    selectedProducts.value.forEach((product) => {
+        const userId = product.id;
+
+        axios.delete(`http://localhost:8085/api/v1/users/${userId}`)
+            .then(response => {
+                products.value = products.value.filter((product) => !selectedProducts.value.includes(product));
+
+                deleteProductsDialog.value = false;
+                selectedProducts.value = null
+
+                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Usuarios eliminados', life: 3000 });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
+
 };
 
 const initFilters = () => {
@@ -141,16 +163,16 @@ const initFilters = () => {
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
-                            <Button label="Añadir" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
+                            <!-- <Button label="Añadir" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" /> -->
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
                     </template>
 
                     <template v-slot:end>
-                        <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
+                        <!-- <FileUpload mode="basic" accept="image/*" :maxFileSize="1000000" label="Import" chooseLabel="Import"
                             class="mr-2 inline-block" />
-                        <Button label="Export" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)" />
+                        <Button label="Export" icon="pi pi-upload" class="p-button-help" @click="exportCSV($event)" /> -->
                     </template>
                 </Toolbar>
 
@@ -158,14 +180,14 @@ const initFilters = () => {
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
-                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+                    currentPageReportTemplate="Mostrando {first} de {last} de {totalRecords} usuarios"
                     responsiveLayout="scroll">
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                             <h5 class="m-0">Gestión de usuarios</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
-                                <InputText v-model="filters['global'].value" placeholder="Search..." />
+                                <InputText v-model="filters['global'].value" placeholder="Buscar..." />
                             </span>
                         </div>
                     </template>
@@ -219,12 +241,18 @@ const initFilters = () => {
                     </Column>
                 </DataTable>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Product Details" :modal="true"
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Editar usuario" :modal="true"
                     class="p-fluid">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
-                        <label for="name">Name</label>
+                        <label for="name">Nombres</label>
+                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.name }" />
+                        <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
+                    </div>
+                    <div class="field">
+                        <label for="name">Apellidos</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">Name is required.</small>
@@ -310,11 +338,11 @@ const initFilters = () => {
                 <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">Estás seguro de eliminar los ítems seleccionados?</span>
+                        <span v-if="product">¿Estás seguro de eliminar los usuarios seleccionados?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />
-                        <Button label="Si" icon="pi pi-check" class="p-button-text" @click="deleteSelectedProducts" />
+                        <Button label="Si" icon="pi pi-check" class="p-button-text" @click="deleteSelectedUsers" />
                     </template>
                 </Dialog>
             </div>
