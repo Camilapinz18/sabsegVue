@@ -146,11 +146,11 @@ const router = createRouter({
                     name: 'equipment',
                     component: () => import('@/views/pages/Equipment.vue')
                 },
-                {
-                    path: '/documentation',
-                    name: 'documentation',
-                    component: () => import('@/views/utilities/Documentation.vue')
-                }
+                // {
+                //     path: '/documentation',
+                //     name: 'documentation',
+                //     component: () => import('@/views/utilities/Documentation.vue')
+                // }
             ]
         },
         {

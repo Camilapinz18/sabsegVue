@@ -25,10 +25,10 @@ import { RouterLink } from 'vue-router'
                 Contacto
             </n-tag>
             <n-tag v-model:checked="checked" checkable>
-                <RouterLink to="/auth/login">
+                <RouterLink to="/auth/signup">
                     <n-space>
                         <n-button color="#0d0378">
-                            Login
+                            SignUp
                         </n-button>
                     </n-space>
                 </RouterLink>

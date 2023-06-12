@@ -32,12 +32,12 @@ const logoUrl = computed(() => {
 const registerUser = () => {
     console.log("IMPRIMIR", signUp);
     axios
-        .post('http://localhost:8085/api/v1/customers', signUp)
+        .post('http://localhost:8085/api/v1/users', signUp)
         .then(response => {
             // Handle the response
             console.log(response.data);
             alert(response.data);
-            router.push('/'); // Use router.push to navigate to '/account'
+            router.push('/pages/users'); // Use router.push to navigate to '/account'
         })
         .catch(error => {
             // Handle any errors

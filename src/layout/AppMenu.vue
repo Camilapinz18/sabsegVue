@@ -36,13 +36,13 @@ const model = ref([
     //         { label: 'All Blocks', icon: 'pi pi-fw pi-globe', url: 'https://www.primefaces.org/primeblocks-vue', target: '_blank' }
     //     ]
     // },
-    {
-        label: 'Utilities',
-        items: [
-            { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' },
-            { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: 'https://www.primefaces.org/primeflex/', target: '_blank' }
-        ]
-    },
+    // {
+    //     label: 'Utilities',
+    //     items: [
+    //         { label: 'PrimeIcons', icon: 'pi pi-fw pi-prime', to: '/utilities/icons' },
+    //         { label: 'PrimeFlex', icon: 'pi pi-fw pi-desktop', url: 'https://www.primefaces.org/primeflex/', target: '_blank' }
+    //     ]
+    // },
     {
         label: 'Módulos',
         icon: 'pi pi-fw pi-briefcase',
@@ -74,11 +74,11 @@ const model = ref([
             //         }
             //     ]
             // },
-            {
-                label: 'Crud',
-                icon: 'pi pi-fw pi-pencil',
-                to: '/pages/crud'
-            },
+            // {
+            //     label: 'Crud',
+            //     icon: 'pi pi-fw pi-pencil',
+            //     to: '/pages/crud'
+            // },
             {
                 label: 'Usuarios',
                 icon: 'pi pi-fw pi-users',
