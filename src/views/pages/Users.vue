@@ -3,6 +3,7 @@ import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, nextTick } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
+import config from '@/config';
 
 const toast = useToast();
 
@@ -28,7 +29,7 @@ onBeforeMount(() => {
 });
 onMounted(async () => {
     axios
-        .get('http://localhost:8085/api/v1/users')
+        .get(config.apiUrl + 'users')
         .then(response => {
             products.value = response.data
         })
@@ -62,7 +63,7 @@ const updateUser = () => {
             phone: product.value.phone
         }
 
-        axios.put(`http://localhost:8085/api/v1/users/${product.value.id}`, update_data)
+        axios.put(config.apiUrl + `users/${product.value.id}`, update_data)
             .then(response => {
                 toast.add({ severity: 'success', summary: 'Correcto', detail: 'Usuario actualizado correctamente', life: 3000 });
                 products.value[findIndexById(product.value.id)] = product.value;
@@ -89,7 +90,7 @@ const confirmDeleteProduct = (editProduct) => {
 const deleteProduct = () => {
     products.value = products.value.filter((val) => val.id !== product.value.id);
 
-    axios.delete(`http://localhost:8085/api/v1/users/${product.value.id}`)
+    axios.delete(config.apiUrl +`users/${product.value.id}`)
         .then(response => {
             deleteProductDialog.value = false;
             product.value = {};
@@ -118,7 +119,7 @@ const deleteSelectedUsers = () => {
     selectedProducts.value.forEach((product) => {
         const userId = product.id;
 
-        axios.delete(`http://localhost:8085/api/v1/users/${userId}`)
+        axios.delete(config.apiUrl +`users/${userId}`)
             .then(response => {
                 products.value = products.value.filter((product) => !selectedProducts.value.includes(product));
 

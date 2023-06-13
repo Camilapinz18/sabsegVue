@@ -4,15 +4,12 @@ import { ref, computed, reactive } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
+import config from '@/config';
 
 const router = useRouter();
 
 const { layoutConfig } = useLayout();
-const name = ref('');
-const surname = ref('');
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
+
 const checked = ref(false);
 
 const signUp = reactive({
@@ -21,7 +18,8 @@ const signUp = reactive({
     phone: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirm_password: '',
+    attendance: 0
 });
 
 
@@ -32,16 +30,17 @@ const logoUrl = computed(() => {
 const registerUser = () => {
     console.log("IMPRIMIR", signUp);
     axios
-        .post('http://localhost:8085/api/v1/users', signUp)
+        .post(config.apiUrl + 'users', signUp)
         .then(response => {
             // Handle the response
             console.log(response.data);
-            alert(response.data);
+            alert(response.data.msg);
             router.push('/pages/users'); // Use router.push to navigate to '/account'
         })
         .catch(error => {
             // Handle any errors
-            console.error(error);
+            console.error("ERROR",error.response.data.detail);
+            alert(error.response.data.detail)
         });
 };
 
@@ -82,7 +81,7 @@ const registerUser = () => {
                             class="w-full mb-3" inputClass="w-full" inputStyle="padding:1rem"></Password>
 
                         <label for="password2" class="block text-900 font-medium text-xl mb-2">Confirmar contraseña</label>
-                        <Password id="password2" v-model="signUp.confirmPassword" placeholder="Confirmar contraseña"
+                        <Password id="password2" v-model="signUp.confirm_password" placeholder="Confirmar contraseña"
                             :toggleMask="true" class="w-full mb-3" inputClass="w-full" inputStyle="padding:1rem"></Password>
 
                         <div class="flex align-items-center justify-content-between mb-5 gap-5">
