@@ -31,7 +31,7 @@ onBeforeMount(() => {
 });
 onMounted(async () => {
     axios
-        .get(config.apiUrl + 'equipments')
+        .get(config.apiUrl + 'reservations')
         .then(response => {
             products.value = response.data
         })
@@ -40,7 +40,7 @@ onMounted(async () => {
         });
 
     axios
-        .get(config.apiUrl + 'equipments/categories/')
+        .get(config.apiUrl + 'rooms/categories/')
         .then(response => {
             categories.value = response.data
         })
@@ -48,7 +48,7 @@ onMounted(async () => {
             console.error(error);
         });
 
-
+        console.log("reservations",products)
 });
 
 const formatCurrency = (value) => {
@@ -66,19 +66,18 @@ const hideDialog = () => {
     submitted.value = false;
 };
 
-const saveEquipment = () => {
+const saveRoom = () => {
     console.log("product",product.value)
     submitted.value = true;
     
     const create_data = { // Declare the update_data variable
-            brand: product.value.brand,
-            reference: product.value.reference,
+            name: product.value.name,
             status: product.value.inventoryStatus.value,
             category_name: product.value.category,
-            total_stock: product.value.total_stock
+
         }
 
-    axios.post(config.apiUrl + `equipments`, create_data)
+    axios.post(config.apiUrl + `rooms`, create_data)
             .then(response => {
                 toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
                 products.value[findIndexById(product.value.id)] = product.value;
@@ -91,18 +90,17 @@ const saveEquipment = () => {
 
 };
 
-const updateEquipment = () => {
+const updateRoom = () => {
     submitted.value = true;
 
     
     const update_data = { // Declare the update_data variable
-        brand: product.value.brand,
-        reference: product.value.reference,
+        name: product.value.name,
         status: product.value.inventoryStatus.value,
-        category_name: product.value.category
+        category_name: product.value.category,
     }
 
-    axios.put(config.apiUrl + `equipments/${product.value.id}`, update_data)
+    axios.put(config.apiUrl + `rooms/${product.value.id}`, update_data)
         .then(response => {
             toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo actualizado correctamente', life: 3000 });
             products.value[findIndexById(product.value.id)] = product.value;
@@ -129,7 +127,7 @@ const confirmDeleteProduct = (editProduct) => {
 const deleteProduct = () => {
     products.value = products.value.filter((val) => val.id !== product.value.id);
 
-    axios.delete(config.apiUrl + `equipments/${product.value.id}`)
+    axios.delete(config.apiUrl + `rooms/${product.value.id}`)
         .then(response => {
             deleteProductDialog.value = false;
             product.value = {};
@@ -158,7 +156,7 @@ const deleteSelectedUsers = () => {
     selectedProducts.value.forEach((product) => {
         const userId = product.id;
 
-        axios.delete(config.apiUrl + `equipments/${userId}`)
+        axios.delete(config.apiUrl + `rooms/${userId}`)
             .then(response => {
                 products.value = products.value.filter((product) => !selectedProducts.value.includes(product));
 
@@ -221,22 +219,10 @@ const initFilters = () => {
                             {{ slotProps.data.id }}
                         </template>
                     </Column>
-                    <Column field="name" header="Marca" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="name" header="Sala" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
-                            <span class="p-column-title">Marca</span>
-                            {{ slotProps.data.brand }}
-                        </template>
-                    </Column>
-                    <Column field="surname" header="Referencia" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">Referencia</span>
-                            {{ slotProps.data.reference }}
-                        </template>
-                    </Column>
-                    <Column field="email" header="Imagen" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">Imagen</span>
-                            {{ slotProps.data.photo }}
+                            <span class="p-column-title">Sala</span>
+                            {{ slotProps.data.name }}
                         </template>
                     </Column>
                     <Column field="phone" header="Estado" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -248,13 +234,7 @@ const initFilters = () => {
 
                         </template>
                     </Column>
-                    <Column field="attendance" header="Categoría" :sortable="true"
-                        headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">Categoría</span>
-                            {{ slotProps.data.category_name }}
-                        </template>
-                    </Column>
+                    
 
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
@@ -270,29 +250,22 @@ const initFilters = () => {
 
 
 
-                <Dialog v-model:visible="updateProductDialog" :style="{ width: '450px' }" header="Editar equipo" :modal="true"
+                <Dialog v-model:visible="updateProductDialog" :style="{ width: '450px' }" header="Editar sala" :modal="true"
                     class="p-fluid">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="field">
-                        <label for="brand">Marca</label>
-                        <InputText id="brand" v-model.trim="product.brand" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.brand }" />
-                        <small class="p-invalid" v-if="submitted && !product.brand">La marca es requerida</small>
+                        <label for="name">Nombre</label>
+                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.name }" />
+                        <small class="p-invalid" v-if="submitted && !product.name">El nombre es requerido</small>
                     </div>
-                    <div class="field">
-                        <label for="reference">Referencia</label>
-                        <InputText id="reference" v-model.trim="product.reference" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.reference }" />
-                        <small class="p-invalid" v-if="submitted && !product.reference">La referencia es requerida</small>
-                    </div>
-
-
+                    
                     <div class="field">
                         <label class="mb-3">Categoría</label>
                         <div class="formgrid grid">
                             <div v-for="category in categories" :key="category.id" class="field-radiobutton col-6">
-                                <RadioButton :id="`category${category.id}`" name="category" :value="category.name"
+                                <RadioButton :id="`category${category.id}`" name="category" :value="category.id"
                                     v-model="product.category" />
                                 <label :for="`category${category.id}`">{{ category.name }}</label>
                             </div>
@@ -324,45 +297,38 @@ const initFilters = () => {
 
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateEquipment" />
+                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Añadir nuevo equipo"
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Añadir nueva sala"
                     :modal="true" class="p-fluid">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
-                    <div class="field">
-                        <label for="brand">Marca</label>
-                        <InputText id="brand" v-model.trim="product.brand" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.brand }" />
-                        <small class="p-invalid" v-if="submitted && !product.brand">La marca es requerida</small>
+                        <div class="field">
+                        <label for="name">Nombre</label>
+                        <InputText id="name" v-model.trim="product.name" required="true" autofocus
+                            :class="{ 'p-invalid': submitted && !product.name }" />
+                        <small class="p-invalid" v-if="submitted && !product.name">El nombre es requerido</small>
                     </div>
-
-                    <div class="field">
-                        <label for="reference">Referencia</label>
-                        <InputText id="reference" v-model.trim="product.reference" required="true" autofocus
-                            :class="{ 'p-invalid': submitted && !product.reference }" />
-                        <small class="p-invalid" v-if="submitted && !product.reference">La referencia es requerida</small>
-                    </div>
-
-
-
+                    
                     <div class="field">
                         <label class="mb-3">Categoría</label>
                         <div class="formgrid grid">
                             <div v-for="category in categories" :key="category.id" class="field-radiobutton col-6">
-                                <RadioButton :id="`category${category.id}`" name="category" :value="category.name"
+                                <RadioButton :id="`category${category.id}`" name="category" :value="category.id"
                                     v-model="product.category" />
                                 <label :for="`category${category.id}`">{{ category.name }}</label>
                             </div>
                         </div>
                     </div>
 
+
+
                     <div class="field">
                         <label for="inventoryStatus" class="mb-3">Estado</label>
                         <Dropdown id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
-                            optionLabel="label" placeholder="Select a Status">
+                            optionLabel="label" placeholder="Seleccione un estado">
                             <template #value="slotProps">
                                 <div v-if="slotProps.value && slotProps.value.value">
                                     <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label
@@ -379,20 +345,10 @@ const initFilters = () => {
                         </Dropdown>
                     </div>
 
-                    <div class="formgrid grid">
-                        <div class="field col">
-                            <label for="total_stock">Cantidad a crear</label>
-                            <InputNumber id="total_stock" v-model="product.total_stock"
-                            locale="en-US" :class="{ 'p-invalid': submitted && !product.total_stock }"
-                            :required="true" :controls="false" />
 
-                            <small class="p-invalid" v-if="submitted && !product.total_stock">La cantidad a crear en
-                                requerida</small>
-                        </div>
-                    </div>
                     <template #footer>
-                        <Button label="Cancelar" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="saveEquipment" />
+                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
+                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveRoom" />
                     </template>
                 </Dialog>
 

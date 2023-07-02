@@ -146,6 +146,16 @@ const router = createRouter({
                     name: 'equipment',
                     component: () => import('@/views/pages/Equipment.vue')
                 },
+                {
+                    path: '/pages/rooms',
+                    name: 'rooms',
+                    component: () => import('@/views/pages/Rooms.vue')
+                },
+                {
+                    path: '/pages/reservations',
+                    name: 'reservations',
+                    component: () => import('@/views/pages/Reservations.vue')
+                },
                 // {
                 //     path: '/documentation',
                 //     name: 'documentation',

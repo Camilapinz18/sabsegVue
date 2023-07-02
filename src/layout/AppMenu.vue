@@ -74,11 +74,11 @@ const model = ref([
             //         }
             //     ]
             // },
-            // {
-            //     label: 'Crud',
-            //     icon: 'pi pi-fw pi-pencil',
-            //     to: '/pages/crud'
-            // },
+            {
+                label: 'Crud',
+                icon: 'pi pi-fw pi-pencil',
+                to: '/pages/crud'
+            },
             {
                 label: 'Usuarios',
                 icon: 'pi pi-fw pi-users',
@@ -88,6 +88,16 @@ const model = ref([
                 label: 'Equipos',
                 icon: 'pi pi-fw pi-microphone',
                 to: '/pages/equipment'
+            },
+            {
+                label: 'Salas',
+                icon: 'pi pi-fw pi-th-large',
+                to: '/pages/rooms'
+            },
+            {
+                label: 'Reservaciones',
+                icon: 'pi pi-fw pi-clock',
+                to: '/pages/reservations'
             },
             // {
             //     label: 'Timeline',

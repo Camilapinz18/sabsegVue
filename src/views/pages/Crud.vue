@@ -16,7 +16,7 @@ const dt = ref(null);
 const filters = ref({});
 const submitted = ref(false);
 const statuses = ref([
-    { label: 'INSTOCK', value: 'instock' },
+    { label: 'INSTOCK_', value: 'instock' },
     { label: 'LOWSTOCK', value: 'lowstock' },
     { label: 'OUTOFSTOCK', value: 'outofstock' }
 ]);
@@ -58,7 +58,7 @@ const saveProduct = () => {
             product.value.id = createId();
             product.value.code = createId();
             product.value.image = 'product-placeholder.svg';
-            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK';
+            product.value.inventoryStatus = product.value.inventoryStatus ? product.value.inventoryStatus.value : 'INSTOCK_';
             products.value.push(product.value);
             toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
         }
