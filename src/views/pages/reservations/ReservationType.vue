@@ -15,6 +15,8 @@ const continueReservation = ref(false);
 const endHour = ref([{ name: '1 hora', code: 1 }, { name: '2 horas', code: 2 }, { name: '3 horas', code: 3 }]);
 const products = ref([]);
 const calendarValue = ref(null);
+const selectedRoom = ref(null);
+const display = ref(false);
 const picklistValue = ref([
     [
         { name: 'San Francisco', code: 'SF' },
@@ -28,10 +30,43 @@ const picklistValue = ref([
     []
 ]);
 
+const confirmReservation = () => {
+
+    let equipments_ids=[]
+    for (let e of selectedEquipments.value) {
+        equipments_ids.push(e.id)
+        console.log("equipments_ids",equipments_ids); // Example: Output each element to the console
+    }
+
+
+    const body = { // Declare the update_data variable
+        date:calendarValue.value.toISOString().split('T')[0],
+        start_hour: startHour.value.code,
+        end_hour: generateEndHour(),
+        client_id:1,
+        reservation_type:1,
+        room_id: selectedRoom.value.id,
+        equipments: equipments_ids
+    }
+    console.log('Search triggered');
+
+
+    axios
+        .post(config.apiUrl + 'reservations', body)
+        .then(response => {
+           alert('reserva')
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
 const open = () => {
     continueReservation.value = true;
-    
+
 };
+
+const selectedEquipments = ref([]);
 const hours = ref([
     { name: '9:00 a.m.', code: '09:00' },
     { name: '10:00 a.m', code: '10:00' },
@@ -52,11 +87,23 @@ const productService = new ProductService();
 const photoService = new PhotoService();
 const loading = ref([false, false, false]);
 
+const close = () => {
+    continueReservation.value = false;
+};
 const load = (index) => {
     loading.value[index] = true;
     setTimeout(() => (loading.value[index] = false), 1000);
 };
 
+const selectRoom = (index) => {
+    console.log("holiwis", index)
+    selectedRoom.value = index
+}
+const selectEquipments = (index) => {
+
+    selectedEquipments.value.push(index)
+    console.log("selectedEquipments", selectedEquipments)
+}
 onMounted(() => {
     productService.getProductsSmall().then((data) => (products.value = data));
     photoService.getImages().then((data) => (images.value = data));
@@ -261,7 +308,8 @@ const openConfirmation = () => {
                                 </div>
                                 <div class="flex align-items-center justify-content-between">
 
-                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto" />
+                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto"
+                                        @click="selectRoom(slotProps.data)" />
                                 </div>
                             </div>
                         </div>
@@ -291,7 +339,8 @@ const openConfirmation = () => {
                                 </div>
                                 <div class="flex align-items-center justify-content-between">
 
-                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto" />
+                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto"
+                                        @click="selectEquipments(slotProps.data)" />
                                 </div>
                             </div>
                         </div>
@@ -306,22 +355,28 @@ const openConfirmation = () => {
 
 
 
-        <div v-if="continueReservation" class="card p-fluid">
-            <h5>Dialog</h5>
-            <Dialog header="Dialog" v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw' }"
-                :modal="true">
-                <p class="line-height-3 m-0">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo
-                    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-                    pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
-                    id est laborum.
-                </p>
-                <template #footer>
-                    <Button label="Ok" @click="close" icon="pi pi-check" class="p-button-outlined" />
-                </template>
-            </Dialog>
-            <Button label="Show" icon="pi pi-external-link" style="width: auto" @click="open" />
+
+
+        <Dialog header="Resumen de la reserva" v-model:visible="continueReservation" :breakpoints="{ '960px': '75vw' }"
+            :style="{ width: '30vw' }" :modal="true">
+            <div class="card">
+                <h5>Datos reserva</h5>
+                <Chip :label="roomType.name" class="mr-2 mb-2"></Chip>
+                <Chip :label="startHour.name" class="mr-2 mb-2"></Chip>
+                <Chip :label="generateEndHour() + ' p.m.'" class="mr-2 mb-2"></Chip>
+                <Chip :label="selectedRoom.name" class="mr-2 mb-2"></Chip>
+            </div>
+            <div class="card">
+                <h5>Equipos seleccionados</h5>
+                <Chip v-for="e in selectedEquipments" :key="e.id" :label="e.brand + ' ' + e.reference" class="mr-2 mb-2">
+                </Chip>
+            </div>
+            <template #footer>
+                <Button label="Confirmar reserva" @click="confirmReservation" icon="pi pi-check"
+                    class="p-button-outlined" />
+            </template>
+        </Dialog>
+
+
     </div>
-</div></template>
+</template>
