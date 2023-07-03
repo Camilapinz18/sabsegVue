@@ -88,11 +88,6 @@ const open = () => {
     continueReservation.value = true;
 };
 
-
-
-
-
-
 const close = () => {
     continueReservation.value = false;
 };
