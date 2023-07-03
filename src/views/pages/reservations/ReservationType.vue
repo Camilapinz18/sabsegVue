@@ -1,72 +1,25 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
 import config from '@/config';
 import ProductService from '@/service/ProductService';
 import PhotoService from '@/service/PhotoService';
-const menu = ref(null);
-const contextMenu = ref(null);
-const roomType = ref(null);
-const selectButtonValues1 = ref([{ name: 'Sala de ensayo' }, { name: 'Estudio de grabación' }]);
+
+const router = useRouter();
+const toast = useToast();
+const loading = ref([false, false, false]);
+
 const images = ref([]);
-const selectedEndHour = ref(null);
-const showList = ref(false);
-const continueReservation = ref(false);
-const endHour = ref([{ name: '1 hora', code: 1 }, { name: '2 horas', code: 2 }, { name: '3 horas', code: 3 }]);
 const products = ref([]);
-const calendarValue = ref(null);
-const selectedRoom = ref(null);
-const display = ref(false);
-const picklistValue = ref([
-    [
-        { name: 'San Francisco', code: 'SF' },
-        { name: 'London', code: 'LDN' },
-        { name: 'Paris', code: 'PRS' },
-        { name: 'Istanbul', code: 'IST' },
-        { name: 'Berlin', code: 'BRL' },
-        { name: 'Barcelona', code: 'BRC' },
-        { name: 'Rome', code: 'RM' }
-    ],
-    []
-]);
+const productService = new ProductService();
+const photoService = new PhotoService();
 
-const confirmReservation = () => {
+//Options variables:
+const reservationTypeOptions = ref([{ name: 'Sala de ensayo' }, { name: 'Estudio de grabación' }]);
+const endHour = ref([{ name: '1 hora', code: 1 }, { name: '2 horas', code: 2 }, { name: '3 horas', code: 3 }]);
 
-    let equipments_ids=[]
-    for (let e of selectedEquipments.value) {
-        equipments_ids.push(e.id)
-        console.log("equipments_ids",equipments_ids); // Example: Output each element to the console
-    }
-
-
-    const body = { // Declare the update_data variable
-        date:calendarValue.value.toISOString().split('T')[0],
-        start_hour: startHour.value.code,
-        end_hour: generateEndHour(),
-        client_id:1,
-        reservation_type:1,
-        room_id: selectedRoom.value.id,
-        equipments: equipments_ids
-    }
-    console.log('Search triggered');
-
-
-    axios
-        .post(config.apiUrl + 'reservations', body)
-        .then(response => {
-           alert('reserva')
-        })
-        .catch(error => {
-            console.error(error);
-        });
-}
-
-const open = () => {
-    continueReservation.value = true;
-
-};
-
-const selectedEquipments = ref([]);
 const hours = ref([
     { name: '9:00 a.m.', code: '09:00' },
     { name: '10:00 a.m', code: '10:00' },
@@ -82,10 +35,63 @@ const hours = ref([
     { name: '08:00 p.m', code: '20:00' },
     { name: '09:00 p.m', code: '21:00' }
 ]);
-const startHour = ref(null);
-const productService = new ProductService();
-const photoService = new PhotoService();
-const loading = ref([false, false, false]);
+
+//User selections
+const selectedRoomType = ref(null);
+const selectedEndHour = ref(null);
+const calendarValue = ref(null);
+const selectedRoom = ref(null);
+const selectedEquipments = ref([]);
+const selectedStartHour = ref(null);
+
+//Control variables:
+const showList = ref(false);
+const displayConfirmationReservation = ref(false);
+const continueReservation = ref(false);
+
+//API methods:
+const confirmReservation = () => {
+    let equipments_ids = []
+    for (let e of selectedEquipments.value) {
+        equipments_ids.push(e.id)
+    }
+
+    const body = {
+        date: calendarValue.value.toISOString().split('T')[0],
+        start_hour: selectedStartHour.value.code,
+        end_hour: generateEndHour(),
+        client_id: 1,
+        reservation_type: 1,
+        room_id: selectedRoom.value.id,
+        equipments: equipments_ids
+    }
+    
+    axios
+        .post(config.apiUrl + 'reservations', body)
+        .then(response => {
+            displayConfirmationReservation.value=false
+            continueReservation.value=false
+            //showSuccess()
+            alert(response.data.msg)
+            router.push('/pages/users');  
+        })
+        .catch(error => {
+            console.error(error);
+        });
+}
+
+//Display methods:
+const showSuccess = () => {
+    toast.add({ severity: 'success', summary: 'Reserva creada', detail: 'Reserva creada exitosamente', life: 3000 });}
+    
+const open = () => {
+    continueReservation.value = true;
+};
+
+
+
+
+
 
 const close = () => {
     continueReservation.value = false;
@@ -138,7 +144,7 @@ const generateEndHour = () => {
 
 
 
-    const time = new Date(`2000-01-01T${startHour.value.code}`);
+    const time = new Date(`2000-01-01T${selectedStartHour.value.code}`);
 
 
     // Add the specified hours to the time
@@ -153,7 +159,7 @@ const generateEndHour = () => {
 const handleSearch = () => {
 
 
-    if (roomType.value && calendarValue.value && startHour.value && endHour.value) {
+    if (selectedRoomType.value && calendarValue.value && selectedStartHour.value && endHour.value) {
         // Perform the search logic here
 
 
@@ -163,7 +169,7 @@ const handleSearch = () => {
 
         const body = { // Declare the update_data variable
             date: date,
-            start_hour: startHour.value.code,
+            start_hour: selectedStartHour.value.code,
             end_hour: generatedEndHour
         }
         console.log('Search triggered');
@@ -252,10 +258,11 @@ const openConfirmation = () => {
 </script>
 
 <template>
+    <Toast />
     <div class="grid p-fluid d-flex flex-column align-items-center">
         <div class="card col-8 mx-auto mb-3">
             <h5>¿Qué quieres reservar?</h5>
-            <SelectButton v-model="roomType" :options="selectButtonValues1" optionLabel="name" />
+            <SelectButton v-model="selectedRoomType" :options="reservationTypeOptions" optionLabel="name" />
         </div>
 
         <div class="card col-8 mx-auto">
@@ -266,7 +273,7 @@ const openConfirmation = () => {
         <div class="card col-8 mx-auto">
             <span class="p-float-label">
                 <h5>Hora de inicio</h5>
-                <Dropdown id="dropdown" :options="hours" v-model="startHour" optionLabel="name"></Dropdown>
+                <Dropdown id="dropdown" :options="hours" v-model="selectedStartHour" optionLabel="name"></Dropdown>
             </span>
         </div>
 
@@ -361,8 +368,8 @@ const openConfirmation = () => {
             :style="{ width: '30vw' }" :modal="true">
             <div class="card">
                 <h5>Datos reserva</h5>
-                <Chip :label="roomType.name" class="mr-2 mb-2"></Chip>
-                <Chip :label="startHour.name" class="mr-2 mb-2"></Chip>
+                <Chip :label="selectedRoomType.name" class="mr-2 mb-2"></Chip>
+                <Chip :label="selectedStartHour.name" class="mr-2 mb-2"></Chip>
                 <Chip :label="generateEndHour() + ' p.m.'" class="mr-2 mb-2"></Chip>
                 <Chip :label="selectedRoom.name" class="mr-2 mb-2"></Chip>
             </div>
@@ -372,10 +379,23 @@ const openConfirmation = () => {
                 </Chip>
             </div>
             <template #footer>
-                <Button label="Confirmar reserva" @click="confirmReservation" icon="pi pi-check"
+                <Button label="Confirmar reserva" @click="displayConfirmationReservation=true" icon="pi pi-check"
                     class="p-button-outlined" />
             </template>
         </Dialog>
+
+
+        <Dialog header="Confirmation" v-model:visible="displayConfirmationReservation" :style="{ width: '350px' }" :modal="true">
+            <div class="flex align-items-center justify-content-center">
+                <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
+                <span>Al dar click en continuar su reservación será creada</span>
+            </div>
+            <template #footer>
+                <Button label="Cancelar" icon="pi pi-times" @click="closeConfirmation" class="p-button-text" />
+                <Button label="Continuar" icon="pi pi-check" @click="confirmReservation" class="p-button-text" autofocus  />
+            </template>
+        </Dialog>
+
 
 
     </div>
