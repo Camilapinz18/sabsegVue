@@ -156,6 +156,11 @@ const router = createRouter({
                     name: 'reservations',
                     component: () => import('@/views/pages/Reservations.vue')
                 },
+                {
+                    path: '/pages/reservations/1',
+                    name: 'reservations',
+                    component: () => import('@/views/pages/reservations/ReservationType.vue')
+                },
                 // {
                 //     path: '/documentation',
                 //     name: 'documentation',

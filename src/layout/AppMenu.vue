@@ -100,6 +100,11 @@ const model = ref([
                 to: '/pages/reservations'
             },
             {
+                label: 'ReservacionesType',
+                icon: 'pi pi-fw pi-clock',
+                to: '/pages/reservations/1'
+            },
+            {
                 label: 'Timeline',
                 icon: 'pi pi-fw pi-calendar',
                 to: '/pages/timeline'
