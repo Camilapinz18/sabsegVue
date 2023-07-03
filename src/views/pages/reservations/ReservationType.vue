@@ -44,12 +44,60 @@ const selectedRoom = ref(null);
 const selectedEquipments = ref([]);
 const selectedStartHour = ref(null);
 
-//Control variables:
+//Display variables:
+const layout = ref('grid');
+const sortOrder = ref(null);
+const sortField = ref(null);
 const showList = ref(false);
 const displayConfirmationReservation = ref(false);
 const continueReservation = ref(false);
+const displayConfirmation = ref(false);
+
+//API variables:
+const roomsAvailable = ref(null);
+const equipmentsAvailable = ref(null);
+
+onMounted(() => {
+    productService.getProductsSmall().then((data) => (products.value = data));
+    photoService.getImages().then((data) => (images.value = data));
+});
 
 //API methods:
+const searchRoomsAndEquipments = () => {
+    if (selectedRoomType.value && calendarValue.value && selectedStartHour.value && endHour.value) {
+        const generatedEndHour = generateEndHour()
+        const date = calendarValue.value.toISOString().split('T')[0];
+
+        const body = {
+            date: date,
+            start_hour: selectedStartHour.value.code,
+            end_hour: generatedEndHour
+        }
+
+        axios
+            .post(config.apiUrl + 'rooms/available/', body)
+            .then(response => {
+                roomsAvailable.value = response.data
+                showList.value = true
+            })
+            .catch(error => {
+                console.error(error);
+            });
+
+        axios
+            .post(config.apiUrl + 'equipments/available/', body)
+            .then(response => {
+                equipmentsAvailable.value = response.data
+                showList.value = true
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    } else {
+        openConfirmation()
+    }
+};
+
 const confirmReservation = () => {
     let equipments_ids = []
     for (let e of selectedEquipments.value) {
@@ -65,187 +113,47 @@ const confirmReservation = () => {
         room_id: selectedRoom.value.id,
         equipments: equipments_ids
     }
-    
+
     axios
         .post(config.apiUrl + 'reservations', body)
         .then(response => {
-            displayConfirmationReservation.value=false
-            continueReservation.value=false
+            displayConfirmationReservation.value = false
+            continueReservation.value = false
             //showSuccess()
             alert(response.data.msg)
-            router.push('/pages/users');  
+            router.push('/pages/users');
         })
         .catch(error => {
             console.error(error);
         });
 }
 
+//logic method:
+const selectRoom = (index) => {
+    selectedRoom.value = index
+}
+
+const selectEquipments = (index) => {
+    selectedEquipments.value.push(index)
+}
+
+const generateEndHour = () => {
+    const time = new Date(`2000-01-01T${selectedStartHour.value.code}`);
+    time.setHours(time.getHours() + selectedEndHour.value.code);
+    const newTimeStr = time.toTimeString().slice(0, 5);
+
+    return newTimeStr;
+}
+
 //Display methods:
 const showSuccess = () => {
-    toast.add({ severity: 'success', summary: 'Reserva creada', detail: 'Reserva creada exitosamente', life: 3000 });}
-    
+    toast.add({ severity: 'success', summary: 'Reserva creada', detail: 'Reserva creada exitosamente', life: 3000 });
+}
+
 const open = () => {
     continueReservation.value = true;
 };
 
-const close = () => {
-    continueReservation.value = false;
-};
-const load = (index) => {
-    loading.value[index] = true;
-    setTimeout(() => (loading.value[index] = false), 1000);
-};
-
-const selectRoom = (index) => {
-    console.log("holiwis", index)
-    selectedRoom.value = index
-}
-const selectEquipments = (index) => {
-
-    selectedEquipments.value.push(index)
-    console.log("selectedEquipments", selectedEquipments)
-}
-onMounted(() => {
-    productService.getProductsSmall().then((data) => (products.value = data));
-    photoService.getImages().then((data) => (images.value = data));
-});
-const carouselResponsiveOptions = ref([
-    {
-        breakpoint: '1024px',
-        numVisible: 3,
-        numScroll: 3
-    },
-    {
-        breakpoint: '768px',
-        numVisible: 2,
-        numScroll: 2
-    },
-    {
-        breakpoint: '560px',
-        numVisible: 1,
-        numScroll: 1
-    }
-]);
-
-const displayConfirmation = ref(false);
-const currentStepIndex = computed(() => {
-    return nestedRouteItems.value.findIndex((item) => item.to === window.location.pathname);
-});
-
-const roomsAvailable = ref(null);
-const equipmentsAvailable = ref(null);
-
-const generateEndHour = () => {
-
-
-
-    const time = new Date(`2000-01-01T${selectedStartHour.value.code}`);
-
-
-    // Add the specified hours to the time
-    time.setHours(time.getHours() + selectedEndHour.value.code);
-
-    // Format the time as a string in the format 'HH:mm'
-    const newTimeStr = time.toTimeString().slice(0, 5);
-    console.log('newTimeStr>>>>>', newTimeStr)
-    return newTimeStr;
-}
-
-const handleSearch = () => {
-
-
-    if (selectedRoomType.value && calendarValue.value && selectedStartHour.value && endHour.value) {
-        // Perform the search logic here
-
-
-        const generatedEndHour = generateEndHour()
-        const date = calendarValue.value.toISOString().split('T')[0];
-        console.log("date>>>>", date)
-
-        const body = { // Declare the update_data variable
-            date: date,
-            start_hour: selectedStartHour.value.code,
-            end_hour: generatedEndHour
-        }
-        console.log('Search triggered');
-
-
-        axios
-            .post(config.apiUrl + 'rooms/available/', body)
-            .then(response => {
-                roomsAvailable.value = response.data
-                showList.value = true
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-        console.log("roomsAvailable", roomsAvailable)
-
-        axios
-            .post(config.apiUrl + 'equipments/available/', body)
-            .then(response => {
-                equipmentsAvailable.value = response.data
-                showList.value = true
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-        console.log("equipmentsAvailable", equipmentsAvailable)
-
-
-    } else {
-        console.log("acaelse")
-        // Display an error message or perform any required validation
-        openConfirmation()
-
-
-    }
-};
-
-
-
-
-const orderlistValue = ref([
-    { name: 'San Francisco', code: 'SF' },
-    { name: 'London', code: 'LDN' },
-    { name: 'Paris', code: 'PRS' },
-    { name: 'Istanbul', code: 'IST' },
-    { name: 'Berlin', code: 'BRL' },
-    { name: 'Barcelona', code: 'BRC' },
-    { name: 'Rome', code: 'RM' }
-]);
-
-const dataviewValue = ref(null);
-const layout = ref('grid');
-const sortKey = ref(null);
-const sortOrder = ref(null);
-const sortField = ref(null);
-const sortOptions = ref([
-    { label: 'Price High to Low', value: '!price' },
-    { label: 'Price Low to High', value: 'price' }
-]);
-
-
-
-onMounted(() => {
-    productService.getProductsSmall().then((data) => (dataviewValue.value = data));
-});
-const onSortChange = (event) => {
-    const value = event.value.value;
-    const sortValue = event.value;
-
-    if (value.indexOf('!') === 0) {
-        sortOrder.value = -1;
-        sortField.value = value.substring(1, value.length);
-        sortKey.value = sortValue;
-    } else {
-        sortOrder.value = 1;
-        sortField.value = value;
-        sortKey.value = sortValue;
-    }
-};
 const openConfirmation = () => {
     displayConfirmation.value = true;
 };
@@ -279,7 +187,7 @@ const openConfirmation = () => {
 
         <div class="card col-8 mx-auto mb-3">
             <Button type="button" class="mr-2 mb-2" label="Buscar salas y equipos disponibles" icon="pi pi-search"
-                :loading="loading[0]" @click="handleSearch" />
+                :loading="loading[0]" @click="searchRoomsAndEquipments" />
         </div>
 
         <Dialog header="Error!" v-model:visible="displayConfirmation" :style="{ width: '350px' }" :modal="true">
@@ -295,7 +203,6 @@ const openConfirmation = () => {
                 <h5>Salas disponibles</h5>
                 <DataView :value="roomsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
                     :sortField="sortField">
-
 
                     <template #grid="slotProps">
                         <div class="col-12 md:col-4">
@@ -320,13 +227,12 @@ const openConfirmation = () => {
                 </DataView>
             </div>
         </div>
+
         <div v-if="showList" class="col-12">
             <div class="card">
                 <h5>Equipos disponibles</h5>
                 <DataView :value="equipmentsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
                     :sortField="sortField">
-
-
                     <template #grid="slotProps">
                         <div class="col-12 md:col-4">
                             <div class="card m-3 border-1 surface-border">
@@ -351,13 +257,10 @@ const openConfirmation = () => {
                 </DataView>
             </div>
         </div>
+
         <div v-if="showList" class="card col-8 mx-auto mb-3">
             <Button label="Continuar" class="p-button-raised p-button-success mr-2 mb-2" @click="open" />
         </div>
-
-
-
-
 
         <Dialog header="Resumen de la reserva" v-model:visible="continueReservation" :breakpoints="{ '960px': '75vw' }"
             :style="{ width: '30vw' }" :modal="true">
@@ -374,24 +277,22 @@ const openConfirmation = () => {
                 </Chip>
             </div>
             <template #footer>
-                <Button label="Confirmar reserva" @click="displayConfirmationReservation=true" icon="pi pi-check"
+                <Button label="Confirmar reserva" @click="displayConfirmationReservation = true" icon="pi pi-check"
                     class="p-button-outlined" />
             </template>
         </Dialog>
 
-
-        <Dialog header="Confirmation" v-model:visible="displayConfirmationReservation" :style="{ width: '350px' }" :modal="true">
+        <Dialog header="Confirmation" v-model:visible="displayConfirmationReservation" :style="{ width: '350px' }"
+            :modal="true">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
                 <span>Al dar click en continuar su reservación será creada</span>
             </div>
             <template #footer>
                 <Button label="Cancelar" icon="pi pi-times" @click="closeConfirmation" class="p-button-text" />
-                <Button label="Continuar" icon="pi pi-check" @click="confirmReservation" class="p-button-text" autofocus  />
+                <Button label="Continuar" icon="pi pi-check" @click="confirmReservation" class="p-button-text" autofocus />
             </template>
         </Dialog>
-
-
 
     </div>
 </template>
