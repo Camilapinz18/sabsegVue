@@ -4,7 +4,6 @@ import { ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 
 const model = ref([
-        label: 'Home',
     // {
     //     label: 'Home',
     //     items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
