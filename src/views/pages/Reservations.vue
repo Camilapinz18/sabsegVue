@@ -15,6 +15,7 @@ const productDialog = ref(false);
 const updateProductDialog = ref(false);
 const deleteProductDialog = ref(false);
 const deleteProductsDialog = ref(false);
+const detailsDialog = ref(false);
 const product = ref({});
 const selectedProducts = ref(null);
 const dt = ref(null);
@@ -50,7 +51,7 @@ onMounted(async () => {
             console.error(error);
         });
 
-        console.log("reservations",products)
+    console.log("reservations", products)
 });
 
 const formatCurrency = (value) => {
@@ -71,33 +72,37 @@ const hideDialog = () => {
 };
 
 const saveRoom = () => {
-    console.log("product",product.value)
+    console.log("product", product.value)
     submitted.value = true;
-    
-    const create_data = { // Declare the update_data variable
-            name: product.value.name,
-            status: product.value.inventoryStatus.value,
-            category_name: product.value.category,
 
-        }
+    const create_data = { // Declare the update_data variable
+        name: product.value.name,
+        status: product.value.inventoryStatus.value,
+        category_name: product.value.category,
+
+    }
 
     axios.post(config.apiUrl + `rooms`, create_data)
-            .then(response => {
-                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
-                products.value[findIndexById(product.value.id)] = product.value;
-                updateProductDialog.value = false;
-                product.value = {};
-            })
-            .catch(error => {
-                console.error(error);
-            });
+        .then(response => {
+            toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
+            products.value[findIndexById(product.value.id)] = product.value;
+            updateProductDialog.value = false;
+            product.value = {};
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
 };
+
+const seeDetails = () => {
+    detailsDialog.value = true
+}
 
 const updateRoom = () => {
     submitted.value = true;
 
-    
+
     const update_data = { // Declare the update_data variable
         name: product.value.name,
         status: product.value.inventoryStatus.value,
@@ -114,7 +119,7 @@ const updateRoom = () => {
         .catch(error => {
             console.error(error);
         });
-    
+
 };
 
 
@@ -190,7 +195,8 @@ const initFilters = () => {
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
-                            <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
+                            <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
+                                @click="openNew" />
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
@@ -223,25 +229,42 @@ const initFilters = () => {
                             {{ slotProps.data.id }}
                         </template>
                     </Column>
-                    <Column field="name" header="Sala" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                    <Column field="name" header="Fecha" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Fecha</span>
+                            {{ slotProps.data.date }}
+                        </template>
+                    </Column>
+                    <Column field="phone" header="Hora Inicio" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Hora Inicio</span>
+                            {{ slotProps.data.start_hour }}
+                        </template>
+                    </Column>
+                    <Column field="phone" header="Hora Final" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Hora Final</span>
+                            {{ slotProps.data.end_hour }}
+                        </template>
+                    </Column>
+                    <Column field="phone" header="Tipo reserva" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Tipo reserva</span>
+                            {{ slotProps.data.reservation.name }}
+                        </template>
+                    </Column>
+                    <Column field="phone" header="Sala" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Sala</span>
-                            {{ slotProps.data.name }}
+                            {{ slotProps.data.room.name }}
                         </template>
                     </Column>
-                    <Column field="phone" header="Estado" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">Estado</span>
-                            <span
-                                :class="'product-badge status-' + (slotProps.data.status ? slotProps.data.status.toLowerCase() : '')">
-                                {{ slotProps.data.status }}</span>
 
-                        </template>
-                    </Column>
-                    
 
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
+                            <Button icon="pi pi-eye" class="p-button-rounded p-button-rounded mr-2"
+                                @click="seeDetails(slotProps.data)" />
                             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
                                 @click="editProduct(slotProps.data)" />
                             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
@@ -251,7 +274,65 @@ const initFilters = () => {
                 </DataTable>
 
 
+                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-6">
+                    <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
+                        class="mt-0 mx-auto mb-5 block shadow-2" />
+                    <div class="card">
 
+
+
+                        <TabView>
+                            <TabPanel header="Equipos reservados">
+
+                                <DataTable :value="products" rowGroupMode="subheader" groupRowsBy="representative.name"
+                                    sortMode="single" sortField="representative.name" :sortOrder="1" scrollable
+                                    scrollHeight="400px">
+
+                                    <Column field="representative.name" header="Representative"></Column>
+                                    <Column field="brand" header="Marca" style="min-width: 200px">
+                                    {{ slotProps }}</Column>
+                                    <Column field="reference" header="Referencia" style="min-width: 200px"></Column>
+                                    <Column field="country" header="Country" style="min-width: 200px">
+                                        <template #body="slotProps">
+                                            <img src="/demo/images/flag/flag_placeholder.png"
+                                                :class="'flag flag-' + slotProps.data.equipments.reference" width="30" />
+                                            <span class="image-text ml-2">{{ slotProps.data.name }}</span>
+                                        </template>
+                                    </Column>
+                              
+                                    <Column field="date" header="Date" style="min-width: 200px"></Column>
+                                    <template #groupheader="slotProps">
+                                        
+                                        <span class="image-text font-bold ml-2">{{ slotProps.data.equipments.brand
+                                        }}</span>
+                                    </template>
+                                    
+                                </DataTable>
+
+                            </TabPanel>
+                            <TabPanel header="Cliente">
+                                <p class="line-height-3 m-0">
+                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
+                                    doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
+                                    veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
+                                    enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
+                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur,
+                                    adipisci velit, sed quia non numquam eius modi.
+                                </p>
+                            </TabPanel>
+
+                        </TabView>
+
+                    </div>
+
+
+
+
+                    <template #footer>
+                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
+                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
+                    </template>
+                </Dialog>
 
 
                 <Dialog v-model:visible="updateProductDialog" :style="{ width: '450px' }" header="Editar sala" :modal="true"
@@ -264,7 +345,7 @@ const initFilters = () => {
                             :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">El nombre es requerido</small>
                     </div>
-                    
+
                     <div class="field">
                         <label class="mb-3">Categoría</label>
                         <div class="formgrid grid">
@@ -305,17 +386,17 @@ const initFilters = () => {
                     </template>
                 </Dialog>
 
-                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Añadir nueva sala"
-                    :modal="true" class="p-fluid">
+                <Dialog v-model:visible="productDialog" :style="{ width: '450px' }" header="Añadir nueva sala" :modal="true"
+                    class="p-fluid">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
-                        <div class="field">
+                    <div class="field">
                         <label for="name">Nombre</label>
                         <InputText id="name" v-model.trim="product.name" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !product.name }" />
                         <small class="p-invalid" v-if="submitted && !product.name">El nombre es requerido</small>
                     </div>
-                    
+
                     <div class="field">
                         <label class="mb-3">Categoría</label>
                         <div class="formgrid grid">
