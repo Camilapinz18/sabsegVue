@@ -1,0 +1,3 @@
+- No se actualiza al crear equipos o Salas
+- Obtener el usuairo actual 
+- añadir jwt

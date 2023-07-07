@@ -3,9 +3,11 @@ import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, nextTick } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
 import config from '@/config';
 
 const toast = useToast();
+const router = useRouter();
 
 const products = ref(null);
 const categories = ref(null);
@@ -56,9 +58,11 @@ const formatCurrency = (value) => {
 };
 
 const openNew = () => {
-    product.value = {};
-    submitted.value = false;
-    productDialog.value = true;
+    // product.value = {};
+    // submitted.value = false;
+    // productDialog.value = true;
+
+    router.push('/pages/reservations_create');
 };
 
 const hideDialog = () => {
@@ -186,7 +190,7 @@ const initFilters = () => {
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
-                            <Button label="Añadir" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
+                            <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2" @click="openNew" />
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
