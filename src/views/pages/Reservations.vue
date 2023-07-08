@@ -11,6 +11,8 @@ const router = useRouter();
 
 const products = ref(null);
 const categories = ref(null);
+const equipments = ref(null);
+const user = ref(null);
 const productDialog = ref(false);
 const updateProductDialog = ref(false);
 const deleteProductDialog = ref(false);
@@ -95,7 +97,29 @@ const saveRoom = () => {
 
 };
 
-const seeDetails = () => {
+const seeDetails = async (equipmentIndex, userIndex) => {
+
+    axios
+        .get(config.apiUrl + `reservations/${equipmentIndex}`)
+        .then(response => {
+            equipments.value = response.data.equipments
+            console.log("RTA", response.data.equipments)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    axios
+        .get(config.apiUrl + `users/${userIndex}`)
+        .then(response => {
+            user.value = response.data
+            console.log("USER", response.data)
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+
     detailsDialog.value = true
 }
 
@@ -264,7 +288,7 @@ const initFilters = () => {
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">
                             <Button icon="pi pi-eye" class="p-button-rounded p-button-rounded mr-2"
-                                @click="seeDetails(slotProps.data)" />
+                                @click="seeDetails(slotProps.data.id, slotProps.data.client.id)" />
                             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
                                 @click="editProduct(slotProps.data)" />
                             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
@@ -274,7 +298,7 @@ const initFilters = () => {
                 </DataTable>
 
 
-                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-6">
+                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-4">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="card">
@@ -284,41 +308,55 @@ const initFilters = () => {
                         <TabView>
                             <TabPanel header="Equipos reservados">
 
-                                <DataTable :value="products" rowGroupMode="subheader" groupRowsBy="representative.name"
-                                    sortMode="single" sortField="representative.name" :sortOrder="1" scrollable
-                                    scrollHeight="400px">
+                                <DataTable ref="dt" :value="equipments" v-model:selection="selectedProducts" dataKey="id"
+                                    responsiveLayout="scroll">
 
-                                    <Column field="representative.name" header="Representative"></Column>
-                                    <Column field="brand" header="Marca" style="min-width: 200px">
-                                    {{ slotProps }}</Column>
-                                    <Column field="reference" header="Referencia" style="min-width: 200px"></Column>
-                                    <Column field="country" header="Country" style="min-width: 200px">
+
+
+                                    <Column field="id" header="ID" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
                                         <template #body="slotProps">
-                                            <img src="/demo/images/flag/flag_placeholder.png"
-                                                :class="'flag flag-' + slotProps.data.equipments.reference" width="30" />
-                                            <span class="image-text ml-2">{{ slotProps.data.name }}</span>
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.id }}
                                         </template>
                                     </Column>
-                              
-                                    <Column field="date" header="Date" style="min-width: 200px"></Column>
-                                    <template #groupheader="slotProps">
-                                        
-                                        <span class="image-text font-bold ml-2">{{ slotProps.data.equipments.brand
-                                        }}</span>
-                                    </template>
-                                    
+                                    <Column field="brand" header="Marca" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.brand }}
+                                        </template>
+                                    </Column>
+                                    <Column field="reference" header="Referencia" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.reference }}
+                                        </template>
+                                    </Column>
+                                    <Column field="category_name" header="Categoría" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.category_name }}
+                                        </template>
+                                    </Column>
+
                                 </DataTable>
+
 
                             </TabPanel>
                             <TabPanel header="Cliente">
-                                <p class="line-height-3 m-0">
-                                    Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                                    doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-                                    veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo
-                                    enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia
-                                    consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Consectetur,
-                                    adipisci velit, sed quia non numquam eius modi.
-                                </p>
+                                <div class="card">
+                                    <div class="avatar-container">
+                                        <Avatar icon="pi pi-user" class="mr-2" size="xlarge"></Avatar>
+                                        <div class="text-container">
+                                            <div v-for="u in user">{{ u }}</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
                             </TabPanel>
 
                         </TabView>
@@ -464,4 +502,16 @@ const initFilters = () => {
     </div>
 </template>
 
-<style scoped lang="scss">@import '@/assets/demo/styles/badges.scss';</style>
+<style scoped lang="scss">
+@import '@/assets/demo/styles/badges.scss';
+
+.avatar-container {
+    display: flex;
+    align-items: center;
+}
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}</style>
