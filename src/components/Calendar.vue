@@ -228,7 +228,7 @@ onUpdated(() => {
                 <div class="h-2 w-2 rounded-full bg-purple-600"></div>
               </div>
               <div class="w-11/12">
-                <h5 class="text-xs tracking-tight text-clip overflow-hidden">
+                <h5 class="text-l tracking-tight text-clip overflow-hidden">
                   {{ evt.title }}
                 </h5>
               </div>

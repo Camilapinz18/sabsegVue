@@ -6,7 +6,12 @@ module.exports = {
     "./src/**/*.{vue,js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      opacity:["disabled"],
+      screens: {
+        'hover': {'raw': '(hover: none)'},
+      },
+    },
   },
   plugins: [],
 }

@@ -7,140 +7,7 @@ import { useRouter } from 'vue-router';
 import config from '@/config';
 import Calendar from '../../components/Calendar.vue'
 
-const events = ref([
-    {
-        id: 1,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 1",
-        time: { start: "2022-01-01 12:00", end: "2022-01-01 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 2,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 2",
-        time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 3,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 3",
-        time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 4,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 4",
-        time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 5,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 5",
-        time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 6,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 6",
-        time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 7,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 7",
-        time: { start: "2023-01-06 12:00", end: "2023-01-06 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 8,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 8",
-        time: { start: "2023-01-19 12:00", end: "2023-01-19 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 9,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 9",
-        time: { start: "2023-01-19 12:00", end: "2023-01-19 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 10,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 10",
-        time: { start: "2023-01-15 12:00", end: "2023-01-15 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 11,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 11",
-        time: { start: "2023-01-15 12:00", end: "2023-01-15 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-    {
-        id: 12,
-        url: "https://github.com/dev-charles15531",
-        title: "Dummy Event Name 12",
-        time: { start: "2023-01-02 12:00", end: "2023-01-02 14:00" },
-        description:
-            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
-        image: "test-img.png",
-        tags: "#fun #nightout #dance #veterantime",
-        location: "At the base",
-    },
-]);
+const events = ref([]);
 
 const toast = useToast();
 const router = useRouter();
@@ -171,10 +38,17 @@ onBeforeMount(() => {
 
 });
 onMounted(async () => {
+
+
     axios
-        .get(config.apiUrl + 'reservations')
+        .get(config.apiUrl + 'reservations', {
+            headers: {
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2ODkwMzAzNjgsImlhdCI6MTY4ODk0MzY2OCwic3ViIjozLCJyb2xlIjoiYWRtaW4ifQ.gAiqER49W1L_6qO1vSVxl9dw8_dMpi-kFltxEvypTKQ'
+            }
+        })
         .then(response => {
             products.value = response.data
+            events.value = response.data
         })
         .catch(error => {
             console.error(error);
@@ -235,6 +109,8 @@ const saveRoom = () => {
 
 const seeDetails = async (equipmentIndex, userIndex) => {
 
+
+
     axios
         .get(config.apiUrl + `reservations/${equipmentIndex}`)
         .then(response => {
@@ -257,6 +133,7 @@ const seeDetails = async (equipmentIndex, userIndex) => {
 
 
     detailsDialog.value = true
+    console.log("DTOS", equipmentIndex, userIndex, detailsDialog.value)
 }
 
 const updateRoom = () => {
@@ -354,6 +231,20 @@ const initFilters = () => {
 
         <div class="col-12">
             <div class="card">
+                <Toolbar class="mb-4">
+                    <template v-slot:start>
+                        <div class="my-2">
+                            <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
+                                @click="openNew" />
+                            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
+                                @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+                        </div>
+                    </template>
+
+                    <template v-slot:end>
+                    </template>
+                </Toolbar>
+
                 <Calendar :events="events">
                     <template #eventDialog="props">
                         <div v-if="props.eventDialogData && props.eventDialogData.title"
@@ -372,7 +263,7 @@ const initFilters = () => {
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <span><span class="font-medium">Your Time: </span>{{
+                                            <span><span class="font-medium">Hora inicio: </span>{{
                                                 props.eventDialogData.time.start }}
                                             </span>
                                         </h6>
@@ -384,8 +275,8 @@ const initFilters = () => {
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                     d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                             </svg>
-                                            <span><span class="font-medium">Their Time: </span>{{
-                                                props.eventDialogData.time.start }}
+                                            <span><span class="font-medium">Hora final: </span>{{
+                                                props.eventDialogData.time.end }}
                                             </span>
                                         </h6>
 
@@ -427,20 +318,14 @@ const initFilters = () => {
 
                                     <div class="w-full flex justify-center mt-6">
                                         <div class="w-full flex items-center justify-between">
-                                            <button
-                                                class="close-flyout flex items-center space-x-2 bg-gray-400 py-1 px-3 text-xs hover:text-sm rounded-md text-gray-700 transition-all"
-                                                @click="props.closeEventDialog">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                                    stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M6 18L18 6M6 6l12 12" />
-                                                </svg>
-                                                <span>close</span>
-                                            </button>
-                                            <a :href="props.eventDialogData.url"
-                                                class="bg-purple-600 rounded-md py-1 md:py-2 px-5 hover:px-6 shadow-md hover:bg-purple-700 transition-all">
-                                                <span class="text-xs md:text-sm font-medium text-white">See more</span>
-                                            </a>
+                                            
+                                            <Button icon="pi pi-eye" class="p-button-rounded p-button-rounded mr-2"
+                                                @click="seeDetails(props.eventDialogData.id, props.eventDialogData.client)" />
+                                          
+                                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                                @click="editProduct(props.eventDialogData)" />
+                                            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
+                                                @click="confirmDeleteProduct(props.eventDialogData)" />
                                         </div>
                                     </div>
                                 </div>
@@ -451,21 +336,8 @@ const initFilters = () => {
                 </Calendar>
 
                 <Toast />
-                <Toolbar class="mb-4">
-                    <template v-slot:start>
-                        <div class="my-2">
-                            <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
-                                @click="openNew" />
-                            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
-                                @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
-                        </div>
-                    </template>
 
-                    <template v-slot:end>
-                    </template>
-                </Toolbar>
-
-                <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
+                <!-- <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
@@ -530,7 +402,7 @@ const initFilters = () => {
                                 @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>
-                </DataTable>
+                </DataTable> -->
 
 
                 <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-8">
@@ -601,10 +473,10 @@ const initFilters = () => {
 
 
 
-                    <template #footer>
+                    <!-- <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
-                    </template>
+                    </template> -->
                 </Dialog>
 
 
