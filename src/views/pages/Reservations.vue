@@ -159,12 +159,14 @@ const confirmDeleteProduct = (editProduct) => {
 
 const deleteProduct = () => {
     products.value = products.value.filter((val) => val.id !== product.value.id);
+    deleteProductDialog.value = false;
+    toast.add({ severity: 'success', summary: 'Successful', detail: 'Equipo eliminado', life: 3000 });
+
 
     axios.delete(config.apiUrl + `rooms/${product.value.id}`)
         .then(response => {
-            deleteProductDialog.value = false;
+            
             product.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Equipo eliminado', life: 3000 });
         })
         .catch(error => {
             console.error(error);

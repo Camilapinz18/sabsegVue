@@ -82,6 +82,7 @@ const saveEquipment = () => {
             .then(response => {
                 toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
                 products.value[findIndexById(product.value.id)] = product.value;
+                products.value.push(create_data); 
                 updateProductDialog.value = false;
                 product.value = {};
             })

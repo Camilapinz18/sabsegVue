@@ -81,6 +81,7 @@ const saveRoom = () => {
             .then(response => {
                 toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
                 products.value[findIndexById(product.value.id)] = product.value;
+                products.value.push(create_data); 
                 console.log("PRODCUTOSSSS",products.value)
                 updateProductDialog.value = false;
                 product.value = {};
@@ -213,13 +214,13 @@ const initFilters = () => {
                         </div>
                     </template>
 
-                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+                    <!-- <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column field="id" header="ID" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">ID</span>
                             {{ slotProps.data.id }}
                         </template>
-                    </Column>
+                    </Column> -->
                     <Column field="name" header="Sala" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Sala</span>

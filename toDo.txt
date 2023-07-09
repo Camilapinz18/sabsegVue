@@ -1,3 +1,4 @@
 - No se actualiza al crear equipos o Salas
 - Obtener el usuairo actual 
 - añadir jwt
+- cuando se añaden equipos, poner un chulito o algo
