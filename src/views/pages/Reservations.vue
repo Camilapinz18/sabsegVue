@@ -298,7 +298,7 @@ const initFilters = () => {
                 </DataTable>
 
 
-                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-4">
+                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-8">
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="card">
