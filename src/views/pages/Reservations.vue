@@ -5,6 +5,142 @@ import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import config from '@/config';
+import Calendar from '../../components/Calendar.vue'
+
+const events = ref([
+  {
+    id: 1,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 1",
+    time: { start: "2022-01-01 12:00", end: "2022-01-01 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 2,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 2",
+    time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 3,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 3",
+    time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 4,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 4",
+    time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 5,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 5",
+    time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 6,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 6",
+    time: { start: "2023-01-11 12:00", end: "2023-01-11 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 7,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 7",
+    time: { start: "2023-01-06 12:00", end: "2023-01-06 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 8,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 8",
+    time: { start: "2023-01-19 12:00", end: "2023-01-19 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 9,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 9",
+    time: { start: "2023-01-19 12:00", end: "2023-01-19 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 10,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 10",
+    time: { start: "2023-01-15 12:00", end: "2023-01-15 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 11,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 11",
+    time: { start: "2023-01-15 12:00", end: "2023-01-15 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+  {
+    id: 12,
+    url: "https://github.com/dev-charles15531",
+    title: "Dummy Event Name 12",
+    time: { start: "2023-01-02 12:00", end: "2023-01-02 14:00" },
+    description:
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores assumenda corporis doloremque et expedita molestias necessitatibus quam quas temporibus veritatis. Deserunt excepturi illum nobis perferendis praesentium repudiandae saepe sapiente voluptatem!",
+    image: "test-img.png",
+    tags: "#fun #nightout #dance #veterantime",
+    location: "At the base",
+  },
+]);
 
 const toast = useToast();
 const router = useRouter();
@@ -215,8 +351,11 @@ const initFilters = () => {
 
 <template>
     <div class="grid">
+        
         <div class="col-12">
             <div class="card">
+                <Calendar :events="events"></Calendar>
+                
                 <Toast />
                 <Toolbar class="mb-4">
                     <template v-slot:start>
