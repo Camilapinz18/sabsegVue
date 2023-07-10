@@ -1,4 +1,5 @@
 <script setup>
+import {useTokenStore} from '../../../stores/token'
 import { useLayout } from '@/layout/composables/layout';
 import { ref, computed } from 'vue';
 import AppConfig from '@/layout/AppConfig.vue';
@@ -7,6 +8,7 @@ import config from '@/config';
 import { useRouter } from 'vue-router';
 
 const { layoutConfig } = useLayout();
+const store=useTokenStore();
 const router = useRouter();
 
 const email = ref(null);
@@ -25,11 +27,16 @@ const login=()=>{
     }
     axios.post(config.apiUrl + 'auth/login', body)
             .then(response => {
-                alert(response.data.msg)
+                const token = response.data.token;
+                const role = response.data.role;
+
+                store.setToken({ token, role });
+
+                alert('Inicio de sesion exitoso');
                 router.push('/pages/users');
             })
             .catch(error => {
-                alert(error.response.data.detail)
+                alert(error.response)
             });
 }
 </script>

@@ -1,4 +1,5 @@
 <script setup>
+import {useTokenStore} from '../../stores/token'
 import { FilterMatchMode } from 'primevue/api';
 import { ref, onMounted, onBeforeMount, nextTick } from 'vue';
 import { useToast } from 'primevue/usetoast';
@@ -8,6 +9,7 @@ import config from '@/config';
 
 const toast = useToast();
 const router = useRouter();
+const store=useTokenStore();
 
 const products = ref(null);
 const categories = ref(null);
@@ -35,25 +37,22 @@ onBeforeMount(() => {
 
 });
 onMounted(async () => {
-    axios
-        .get(config.apiUrl + 'reservations')
-        .then(response => {
-            products.value = response.data
-        })
-        .catch(error => {
-            console.error(error);
-        });
+  try {
+    const response = await axios.get(config.apiUrl + 'reservations');
+    products.value = response.data;
 
-    axios
-        .get(config.apiUrl + 'rooms/categories/')
-        .then(response => {
-            categories.value = response.data
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    console.log("reservations", products);
+    console.log("STORE", store.token.value.token);
+  } catch (error) {
+    console.error(error);
+  }
 
-    console.log("reservations", products)
+  try {
+    const response = await axios.get(config.apiUrl + 'rooms/categories/');
+    categories.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
 });
 
 const formatCurrency = (value) => {
@@ -223,6 +222,7 @@ const initFilters = () => {
                         <div class="my-2">
                             <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
                                 @click="openNew" />
+                                {{store}}
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
