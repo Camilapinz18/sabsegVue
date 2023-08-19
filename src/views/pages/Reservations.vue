@@ -6,6 +6,9 @@ import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import config from '@/config';
+import Calendar from '../../components/Calendar.vue'
+
+const events = ref([]);
 
 const toast = useToast();
 const router = useRouter();
@@ -98,6 +101,8 @@ const saveRoom = () => {
 
 const seeDetails = async (equipmentIndex, userIndex) => {
 
+
+
     axios
         .get(config.apiUrl + `reservations/${equipmentIndex}`)
         .then(response => {
@@ -120,6 +125,7 @@ const seeDetails = async (equipmentIndex, userIndex) => {
 
 
     detailsDialog.value = true
+    console.log("DTOS", equipmentIndex, userIndex, detailsDialog.value)
 }
 
 const updateRoom = () => {
@@ -164,7 +170,7 @@ const deleteProduct = () => {
 
     axios.delete(config.apiUrl + `rooms/${product.value.id}`)
         .then(response => {
-            
+
             product.value = {};
         })
         .catch(error => {
@@ -214,9 +220,9 @@ const initFilters = () => {
 
 <template>
     <div class="grid">
+
         <div class="col-12">
             <div class="card">
-                <Toast />
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
@@ -232,7 +238,99 @@ const initFilters = () => {
                     </template>
                 </Toolbar>
 
-                <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
+                <Calendar :events="events">
+                    <template #eventDialog="props">
+                        <div v-if="props.eventDialogData && props.eventDialogData.title"
+                            class="p-4 flex justify-center bg-gray-200 border border-gray-400 rounded-md">
+                            <div>
+                                <div class="text-sm md:text-base font-bold text-gray-700 text-center">
+                                    {{ props.eventDialogData.title }}
+                                </div>
+
+                                <div class="mt-5">
+                                    <div class="text-xs text-gray-700 space-y-2">
+                                        <!-- your time -->
+                                        <h6 class="flex items-center space-x-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span><span class="font-medium">Hora inicio: </span>{{
+                                                props.eventDialogData.time.start }}
+                                            </span>
+                                        </h6>
+
+                                        <!-- their time -->
+                                        <h6 class="flex items-center space-x-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                            </svg>
+                                            <span><span class="font-medium">Hora final: </span>{{
+                                                props.eventDialogData.time.end }}
+                                            </span>
+                                        </h6>
+
+                                        <!-- tags -->
+                                        <h6 class="flex items-center space-x-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6 6h.008v.008H6V6z" />
+                                            </svg>
+                                            <span class="font-medium italic">{{ props.eventDialogData.tags }}
+                                            </span>
+                                        </h6>
+
+                                        <!-- Location -->
+                                        <h6 class="flex items-center space-x-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                                            </svg>
+
+                                            <span class="font-medium uppercase">{{
+                                                props.eventDialogData.location
+                                            }}</span>
+                                        </h6>
+                                    </div>
+
+                                    <div v-if="props.eventDialogData.image != null" class="w-full flex justify-center mt-5">
+                                        <img :src="'../public/' + props.eventDialogData.image" alt="launch image"
+                                            class="rounded-full h-36 w-36" />
+                                    </div>
+
+                                    <div class="w-full text-xs font-medium text-gray-700 mt-5">
+                                        {{ props.eventDialogData.description }}
+                                    </div>
+
+                                    <div class="w-full flex justify-center mt-6">
+                                        <div class="w-full flex items-center justify-between">
+                                            
+                                            <Button icon="pi pi-eye" class="p-button-rounded p-button-rounded mr-2"
+                                                @click="seeDetails(props.eventDialogData.id, props.eventDialogData.client)" />
+                                          
+                                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                                @click="editProduct(props.eventDialogData)" />
+                                            <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
+                                                @click="confirmDeleteProduct(props.eventDialogData)" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </Calendar>
+
+                <Toast />
+
+                <!-- <DataTable ref="dt" :value="products" v-model:selection="selectedProducts" dataKey="id" :paginator="true"
                     :rows="10" :filters="filters"
                     paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                     :rowsPerPageOptions="[5, 10, 25]"
@@ -297,7 +395,7 @@ const initFilters = () => {
                                 @click="confirmDeleteProduct(slotProps.data)" />
                         </template>
                     </Column>
-                </DataTable>
+                </DataTable> -->
 
 
                 <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-8">
@@ -368,10 +466,10 @@ const initFilters = () => {
 
 
 
-                    <template #footer>
+                    <!-- <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
-                    </template>
+                    </template> -->
                 </Dialog>
 
 
@@ -516,4 +614,5 @@ const initFilters = () => {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
-}</style>
+}
+</style>

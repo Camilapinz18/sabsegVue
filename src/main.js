@@ -108,7 +108,9 @@ import '@/assets/styles.scss';
 
 import naive from 'naive-ui'
 import 'vfonts/Lato.css'
+import "./assets/main.css";
 
+const pinia = createPinia();
 const app = createApp(App);
 
 app.use(createPinia())
