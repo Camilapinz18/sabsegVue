@@ -2,12 +2,23 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import { useLayout } from '@/layout/composables/layout';
 import { useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router'
+import {useTokenStore} from '../stores/token.js'
 
 const { layoutConfig, onMenuToggle } = useLayout();
 
 const outsideClickListener = ref(null);
 const topbarMenuActive = ref(false);
 const router = useRouter();
+
+const store=useTokenStore();
+
+
+
+const logout = () => {
+    store.clearToken();
+    router.push('/');
+};
 
 onMounted(() => {
     bindOutsideClickListener();
@@ -76,18 +87,17 @@ const isOutsideClicked = (event) => {
         </button>
 
         <div class="layout-topbar-menu" :class="topbarMenuClasses">
-            <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
+            <!-- <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-calendar"></i>
                 <span>Calendar</span>
             </button>
             <button @click="onTopBarMenuButton()" class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
-            </button>
-            <button @click="onSettingsClick()" class="p-link layout-topbar-button">
-                <i class="pi pi-cog"></i>
-                <span>Settings</span>
-            </button>
+            </button> -->
+            <!-- <RouterLink to="/" > -->
+                <Button label="Cerrar sesión" class="p-button-danger" @click="logout"></Button>
+            <!-- </RouterLink> -->
         </div>
     </div>
 </template>

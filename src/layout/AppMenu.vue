@@ -53,20 +53,20 @@ const model = ref([
             //     icon: 'pi pi-fw pi-globe',
             //     to: '/landing'
             // },
-            {
-                label: 'Auth',
-                icon: 'pi pi-fw pi-user',
-                items: [
-                    {
-                        label: 'Login',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/auth/login'
-                    },
-                    {
-                        label: 'Signup',
-                        icon: 'pi pi-fw pi-sign-in',
-                        to: '/auth/signup'
-                    },
+            // {
+            //     label: 'Auth',
+            //     icon: 'pi pi-fw pi-user',
+            //     items: [
+            //         {
+            //             label: 'Login',
+            //             icon: 'pi pi-fw pi-sign-in',
+            //             to: '/auth/login'
+            //         },
+            //         {
+            //             label: 'Signup',
+            //             icon: 'pi pi-fw pi-sign-in',
+            //             to: '/auth/signup'
+            //         },
                     // {
                     //     label: 'Error',
                     //     icon: 'pi pi-fw pi-times-circle',
@@ -77,8 +77,8 @@ const model = ref([
                     //     icon: 'pi pi-fw pi-lock',
                     //     to: '/auth/access'
                     // }
-                ]
-            },
+              //  ]
+            //},
             // {
             //     label: 'Crud',
             //     icon: 'pi pi-fw pi-pencil',
