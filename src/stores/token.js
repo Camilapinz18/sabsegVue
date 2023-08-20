@@ -8,11 +8,11 @@ export const useTokenStore = defineStore('token', () => {
     })
 
     const setToken=(token_received)=>{
-        console.log("STOREERERERER",token_received)
         token.value.token=token_received.token
         token.value.role=token_received.role
 
-        console.log("TOKENENENEN",token)
+        console.log("TOKENENENE>>>>>N",token.value.token)
+        console.log("ZZZZZZZZZ",token)
         
     }
 

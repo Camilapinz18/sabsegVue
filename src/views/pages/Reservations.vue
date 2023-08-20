@@ -8,6 +8,7 @@ import { useRouter } from 'vue-router';
 import config from '@/config';
 import Calendar from '../../components/Calendar.vue'
 
+
 const events = ref([]);
 
 const toast = useToast();
@@ -41,11 +42,17 @@ onBeforeMount(() => {
 });
 onMounted(async () => {
   try {
-    const response = await axios.get(config.apiUrl + 'reservations');
+    console.log("esto es un token>>>>>>")
+    console.log(store.token.token)
+    const response = await axios.get(config.apiUrl + 'reservations',{
+        headers:{
+            Authorization: `Bearer ${store.token.token}`
+        }
+    });
     products.value = response.data;
 
     console.log("reservations", products);
-    console.log("STORE", store.token.value.token);
+  
   } catch (error) {
     console.error(error);
   }

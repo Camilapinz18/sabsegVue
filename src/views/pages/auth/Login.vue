@@ -31,6 +31,7 @@ const login=()=>{
                 const role = response.data.role;
 
                 store.setToken({ token, role });
+                
 
                 alert('Inicio de sesion exitoso');
                 router.push('/pages/users');
