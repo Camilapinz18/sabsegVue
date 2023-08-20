@@ -6,6 +6,7 @@ import AppConfig from '@/layout/AppConfig.vue';
 import axios from 'axios';
 import config from '@/config';
 import { useRouter } from 'vue-router';
+import { RouterLink } from 'vue-router'
 
 const { layoutConfig } = useLayout();
 const store=useTokenStore();
@@ -69,6 +70,13 @@ const login=()=>{
                             <a class="font-medium no-underline ml-2 text-right cursor-pointer" style="color: var(--primary-color)">¿Olvidaste tu contraseña?</a>
                         </div> -->
                         <Button label="Iniciar sesión" class="w-full p-3 text-xl" @click="login"></Button>
+                        
+                    </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="w-full p-3 text-xl text-center">o</span>
+                        <RouterLink to="/auth/signup">
+                            <Button label="Crear una cuenta" class="w-full p-2 text-xl"></Button>
+                        </RouterLink>
                     </div>
                 </div>
             </div>

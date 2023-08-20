@@ -8,7 +8,7 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes: [
         {
-            path: '/',
+            path: '/app',
             component: AppLayout,
             children: [
         
@@ -48,15 +48,15 @@ const router = createRouter({
         
 
         {
-            path: '/auth/login',
+            path: '/',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
         },
-        // {
-        //     path: '/auth/signup',
-        //     name: 'signup',
-        //     component: () => import('@/views/pages/auth/Signup.vue')
-        // },
+        {
+            path: '/auth/signup',
+            name: 'signup',
+            component: () => import('@/views/pages/auth/Signup.vue')
+        },
         {
             path: '/home',
             name: 'home',

@@ -89,6 +89,12 @@ const registerUser = () => {
                         </div>
                         <Button @click="registerUser" label="Registrarse" class="w-full p-3 text-xl"></Button>
                     </div>
+                    <div class="flex flex-col items-center justify-center">
+                        <span class="w-full p-3 text-xl text-center">o</span>
+                        <RouterLink to="/">
+                            <Button label="Iniciar sesión" class="w-full p-2 text-xl"></Button>
+                        </RouterLink>
+                    </div>
                 </div>
             </div>
         </div>
