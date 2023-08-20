@@ -30,12 +30,13 @@ const logoUrl = computed(() => {
 const registerUser = () => {
     console.log("IMPRIMIR", signUp);
     axios
-        .post(config.apiUrl + 'users', signUp)
+        .post(config.apiUrl + 'auth/register', signUp)
         .then(response => {
             // Handle the response
             console.log(response.data);
             alert(response.data.msg);
-            router.push('/pages/users'); // Use router.push to navigate to '/account'
+            alert("Por favor inicie sesión")
+            router.push('/'); // Use router.push to navigate to '/account'
         })
         .catch(error => {
             // Handle any errors
@@ -92,7 +93,7 @@ const registerUser = () => {
                     <div class="flex flex-col items-center justify-center">
                         <span class="w-full p-3 text-xl text-center">o</span>
                         <RouterLink to="/">
-                            <Button label="Iniciar sesión" class="w-full p-2 text-xl"></Button>
+                            <Button label="Iniciar sesión" class="p-button-outlined"></Button>
                         </RouterLink>
                     </div>
                 </div>

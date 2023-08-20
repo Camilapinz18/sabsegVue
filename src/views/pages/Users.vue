@@ -94,7 +94,7 @@ const deleteProduct = () => {
         .then(response => {
             deleteProductDialog.value = false;
             product.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Successful', detail: 'Usuario eliminado', life: 3000 });
         })
         .catch(error => {
             console.error(error);

@@ -99,6 +99,10 @@ const openNew = () => {
     router.push('/pages/reservations_create');
 };
 
+const closeModal = () => {
+  detailsDialog.value = false;
+}
+
 const hideDialog = () => {
     productDialog.value = false;
     submitted.value = false;
@@ -129,6 +133,8 @@ const saveRoom = () => {
 };
 
 const seeDetails = async (equipmentIndex, userIndex) => {
+    console.log("detallesAAAAAA")
+    console.log(equipmentIndex+","+userIndex)
 
 
 
@@ -147,14 +153,18 @@ const seeDetails = async (equipmentIndex, userIndex) => {
         .then(response => {
             user.value = response.data
             console.log("USER", response.data)
+            detailsDialog.value = true
+            console.log("OPCIONS")
+            console.log(detailsDialog.value = true)
+            
         })
         .catch(error => {
             console.error(error);
         });
 
 
-    detailsDialog.value = true
-    console.log("DTOS", equipmentIndex, userIndex, detailsDialog.value)
+    
+    //console.log("DTOS", equipmentIndex, userIndex, detailsDialog.value)
 }
 
 const updateRoom = () => {
@@ -186,10 +196,30 @@ const editProduct = (editProduct) => {
     updateProductDialog.value = true;
 };
 
-const confirmDeleteProduct = (editProduct) => {
-    product.value = editProduct;
-    deleteProductDialog.value = true;
-};
+const confirmDeleteProduct = (editProduct, props) => {
+    console.log("prooprs")
+    console.log(props)
+    
+  if (window.confirm('¿Estás seguro?')) {
+    axios.delete(config.apiUrl + `reservations/${editProduct}`)
+      .then(response => {
+        
+        alert(response.data.msg);
+
+        // Filtrar el array de productos y asignar el nuevo array filtrado a "products"
+        products.value = products.value.filter(p => p.id !== editProduct);
+        console.log(products.value);
+        props.closeEventDialog()
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }else {
+    // El usuario hizo clic en "Cancelar"
+    alert('Cancelado');
+    
+  }
+}
 
 const deleteProduct = () => {
     products.value = products.value.filter((val) => val.id !== product.value.id);
@@ -249,15 +279,18 @@ const initFilters = () => {
 
 <template>
     <div class="grid">
+    
 
         <div class="col-12">
             <div class="card">
                 <Toolbar class="mb-4">
                     <template v-slot:start>
                         <div class="my-2">
+                        
                             <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
                                 @click="openNew" />
-                                {{store}}
+                                {{detailsDialog}}
+                                {{"hola"}}
                             <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
                                 @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
                         </div>
@@ -268,7 +301,9 @@ const initFilters = () => {
                 </Toolbar>
 
                 <Calendar :events="products">
+                
                     <template #eventDialog="props">
+                    {{props.eventDialogData}}
                         <div v-if="props.eventDialogData && props.eventDialogData.title"
                             class="p-4 flex justify-center bg-gray-200 border border-gray-400 rounded-md">
                             <div>
@@ -347,7 +382,7 @@ const initFilters = () => {
                                             <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
                                                 @click="editProduct(props.eventDialogData)" />
                                             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
-                                                @click="confirmDeleteProduct(props.eventDialogData)" />
+                                                @click="confirmDeleteProduct(props.eventDialogData.id, props)" />
                                         </div>
                                     </div>
                                 </div>
@@ -426,9 +461,84 @@ const initFilters = () => {
                     </Column>
                 </DataTable> -->
 
+                <span v-if="detailsDialog">
+                HOLAAAA
+                </span>
 
-                <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-8">
+                <div v-if="detailsDialog" class="modal">
+                <div class="modal-content">
+                    <span class="close" @click="closeModal">&times;</span>
+                    <h3>Detalles de la reserva</h3>
                     <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
+                        class="mt-0 mx-auto mb-5 block shadow-2" />
+                    <div class="card">
+
+
+
+                        <TabView>
+                            <TabPanel header="Equipos reservados">
+
+                                <DataTable ref="dt" :value="equipments" v-model:selection="selectedProducts" dataKey="id"
+                                    responsiveLayout="scroll">
+
+
+
+                                    <Column field="id" header="ID" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.id }}
+                                        </template>
+                                    </Column>
+                                    <Column field="brand" header="Marca" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.brand }}
+                                        </template>
+                                    </Column>
+                                    <Column field="reference" header="Referencia" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.reference }}
+                                        </template>
+                                    </Column>
+                                    <Column field="category_name" header="Categoría" :sortable="true"
+                                        headerStyle="width:14%; min-width:10rem;">
+                                        <template #body="slotProps">
+                                            <span class="p-column-title">ID</span>
+                                            {{ slotProps.data.category_name }}
+                                        </template>
+                                    </Column>
+
+                                </DataTable>
+
+
+                            </TabPanel>
+                            <TabPanel header="Cliente">
+                                <div class="card">
+                                    <div class="avatar-container">
+                                        <Avatar icon="pi pi-user" class="mr-2" size="xlarge"></Avatar>
+                                        <div class="text-container">
+                                            <div v-for="u in user">{{ u }}</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </TabPanel>
+
+                        </TabView>
+
+                    </div>
+
+                </div>
+                </div>
+
+                <!-- <Dialog v-model:visible="detailsDialog" header="Detalles de reserva" :modal="true" class="p-fluid col-8">
+                    {{"jajajaja"}} -->
+                    <!-- <img :src="'demo/images/product/' + product.image" :alt="product.image" v-if="product.image" width="150"
                         class="mt-0 mx-auto mb-5 block shadow-2" />
                     <div class="card">
 
@@ -495,11 +605,11 @@ const initFilters = () => {
 
 
 
-                    <!-- <template #footer>
+                    <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
                         <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
                     </template> -->
-                </Dialog>
+                <!-- </Dialog> -->
 
 
                 <Dialog v-model:visible="updateProductDialog" :style="{ width: '450px' }" header="Editar sala" :modal="true"
@@ -643,5 +753,33 @@ const initFilters = () => {
     display: flex;
     flex-direction: column;
     margin-left: 20px;
+}
+
+.modal {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.close {
+  float: right;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>

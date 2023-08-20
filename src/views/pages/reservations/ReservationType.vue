@@ -1,5 +1,6 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import {useTokenStore} from '../../../stores/token'
 import { useRouter } from 'vue-router';
 import { useToast } from 'primevue/usetoast';
 import axios from 'axios';
@@ -8,6 +9,7 @@ import ProductService from '@/service/ProductService';
 import PhotoService from '@/service/PhotoService';
 
 const router = useRouter();
+const store=useTokenStore();
 const toast = useToast();
 const loading = ref([false, false, false]);
 
@@ -108,14 +110,18 @@ const confirmReservation = () => {
         date: calendarValue.value.toISOString().split('T')[0],
         start_hour: selectedStartHour.value.code,
         end_hour: generateEndHour(),
-        client_id: 1,
+        client_id: store.token.id,
         reservation_type: 1,
         room_id: selectedRoom.value.id,
         equipments: equipments_ids
     }
 
     axios
-        .post(config.apiUrl + 'reservations', body)
+        .post(config.apiUrl + 'reservations', body, {
+            headers:{
+                Authorization: `Bearer ${store.token.token}`
+            }
+        })
         .then(response => {
             displayConfirmationReservation.value = false
             continueReservation.value = false

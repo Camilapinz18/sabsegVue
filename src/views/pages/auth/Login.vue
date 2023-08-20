@@ -30,8 +30,9 @@ const login=()=>{
             .then(response => {
                 const token = response.data.token;
                 const role = response.data.role;
+                const id = response.data.id;
 
-                store.setToken({ token, role });
+                store.setToken({ token, role, id });
                 
 
                 alert('Inicio de sesion exitoso');
@@ -75,7 +76,7 @@ const login=()=>{
                     <div class="flex flex-col items-center justify-center">
                         <span class="w-full p-3 text-xl text-center">o</span>
                         <RouterLink to="/auth/signup">
-                            <Button label="Crear una cuenta" class="w-full p-2 text-xl"></Button>
+                            <Button label="Crear una cuenta" class="p-button-outlined"></Button>
                         </RouterLink>
                     </div>
                 </div>
