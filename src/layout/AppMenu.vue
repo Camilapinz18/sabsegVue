@@ -4,10 +4,10 @@ import { ref } from 'vue';
 import AppMenuItem from './AppMenuItem.vue';
 
 const model = ref([
-    {
-        label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
-    },
+    // {
+    //     label: 'Home',
+    //     items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }]
+    // },
     // {
     //     label: 'UI Components',
     //     items: [
@@ -61,7 +61,7 @@ const model = ref([
                         label: 'Login',
                         icon: 'pi pi-fw pi-sign-in',
                         to: '/auth/login'
-                    }
+                    },
                     // {
                     //     label: 'Error',
                     //     icon: 'pi pi-fw pi-times-circle',
@@ -74,11 +74,11 @@ const model = ref([
                     // }
                 ]
             },
-            // {
-            //     label: 'Crud',
-            //     icon: 'pi pi-fw pi-pencil',
-            //     to: '/pages/crud'
-            // },
+            {
+                label: 'Crud',
+                icon: 'pi pi-fw pi-pencil',
+                to: '/pages/crud'
+            },
             {
                 label: 'Usuarios',
                 icon: 'pi pi-fw pi-users',

@@ -36,8 +36,30 @@ const statuses = ref([
 ]);
 
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
     initFilters();
+    try {
+    console.log("esto es un token>>>>>>")
+    console.log(store.token.token)
+    const response = await axios.get(config.apiUrl + 'reservations',{
+        headers:{
+            Authorization: `Bearer ${store.token.token}`
+        }
+    });
+    products.value = response.data;
+
+    console.log("reservations", products);
+  
+  } catch (error) {
+    console.error(error);
+  }
+
+  try {
+    const response = await axios.get(config.apiUrl + 'rooms/categories/');
+    categories.value = response.data;
+  } catch (error) {
+    console.error(error);
+  }
 
 });
 onMounted(async () => {
@@ -245,7 +267,7 @@ const initFilters = () => {
                     </template>
                 </Toolbar>
 
-                <Calendar :events="events">
+                <Calendar :events="products">
                     <template #eventDialog="props">
                         <div v-if="props.eventDialogData && props.eventDialogData.title"
                             class="p-4 flex justify-center bg-gray-200 border border-gray-400 rounded-md">
