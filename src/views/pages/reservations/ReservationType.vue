@@ -70,7 +70,10 @@ const searchRoomsAndEquipments = () => {
         const generatedEndHour = generateEndHour()
         const date = calendarValue.value.toISOString().split('T')[0];
 
+        console.log(selectedRoomType)
+
         const body = {
+            room_type: selectedRoomType.value.name,
             date: date,
             start_hour: selectedStartHour.value.code,
             end_hour: generatedEndHour
@@ -224,68 +227,57 @@ const openConfirmation = () => {
 
         </Dialog>
 
-        <div v-if="showList" class="col-12">
-            <div class="card">
-                <h5>Salas disponibles</h5>
-                <DataView :value="roomsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
-                    :sortField="sortField">
-
-                    <template #grid="slotProps">
-                        <div class="col-12 md:col-4">
-                            <div class="card m-3 border-1 surface-border">
-
-                                <div class="text-center">
-                                   
-                                    <div class="text-2xl font-bold">{{ slotProps.data.name }}</div>
-                                    <div class="mb-3">{{ slotProps.data.description }}</div>
-
-                                </div>
-                                <div class="flex align-items-center justify-content-between">
-
-                                    <Button
-          :icon="isSelectedRoom(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
-          :class="{'p-button-rounded': true, 'p-button-danger': isSelectedRoom(slotProps.data), 'p-button-success': !isSelectedRoom(slotProps.data), 'mr-2': true, 'mb-2': true, 'mx-auto': true}"
-          @click="selectRoom(slotProps.data)" />
-                                </div>
-                            </div>
+        <div v-if="showList" class="card col-8 mx-auto mb-3">
+    <div class="card-grid">
+        <h5>Salas disponibles</h5>
+        <DataView :value="roomsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
+            :sortField="sortField">
+            <template #grid="slotProps">
+                <div class="card-item">
+                    <div class="card m-3 border-1 surface-border">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold">{{ slotProps.data.name }}</div>
+                            <div class="mb-3">{{ slotProps.data.description }}</div>
                         </div>
-                    </template>
+                        <div class="flex justify-center items-center p-2">
+                            <Button
+                                :icon="isSelectedRoom(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
+                                :class="{'p-button-rounded': true, 'p-button-danger': isSelectedRoom(slotProps.data), 'p-button-success': !isSelectedRoom(slotProps.data), 'mr-2': true, 'mb-2': true, 'mx-auto': true}"
+                                @click="selectRoom(slotProps.data)" />
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </DataView>
+    </div>
 
-                </DataView>
-            </div>
         </div>
 
-        <div v-if="showList" class="col-12">
-            <div class="card">
-                <h5>Equipos disponibles</h5>
-                <DataView :value="equipmentsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
-                    :sortField="sortField">
-                    <template #grid="slotProps">
-                        <div class="col-12 md:col-4">
-                            <div class="card m-3 border-1 surface-border">
-
-                                <div class="text-center">
-                                   
-                                    <div class="text-2xl font-bold">{{ slotProps.data.brand }}</div>
-                                    <div class="text-2xl font-regular">{{ slotProps.data.reference }}</div>
-                                    <div class="mb-3">{{ slotProps.data.description }}</div>
-
-                                </div>
-                                <div class="flex align-items-center justify-content-between">
-
-                                    <Button
-                                        :icon="isSelected(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
-                                        :class="{'p-button-rounded p-button-danger': isSelected(slotProps.data),
-                                                'p-button-rounded p-button-success': !isSelected(slotProps.data)}"
-                                        :mr="2" :mb="2" :mx-auto="true"
-                                        @click="toggleEquipmentsSelection(slotProps.data)" />
-                                </div>
-                            </div>
+        <div v-if="showList" class="card col-8 mx-auto mb-3">
+            <div class="card-grid">
+        <h5>Equipos disponibles</h5>
+        <DataView :value="equipmentsAvailable" :layout="layout" :paginator="true" :rows="9" :sortOrder="sortOrder"
+            :sortField="sortField">
+            <template #grid="slotProps">
+                <div class="card-item">
+                    <div class="card m-3 border-1 surface-border">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold">{{ slotProps.data.brand }}</div>
+                            <div class="text-2xl font-regular">{{ slotProps.data.reference }}</div>
+                            <div class="mb-3">{{ slotProps.data.description }}</div>
                         </div>
-                    </template>
-
-                </DataView>
-            </div>
+                        <div class="flex justify-center items-center p-2">
+                            <Button
+                                :icon="isSelected(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
+                                :class="{'p-button-rounded p-button-danger': isSelected(slotProps.data),
+                                        'p-button-rounded p-button-success': !isSelected(slotProps.data)}"
+                                @click="toggleEquipmentsSelection(slotProps.data)" />
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </DataView>
+    </div>
         </div>
 
         <div v-if="showList" class="card col-8 mx-auto mb-3">
@@ -316,7 +308,7 @@ const openConfirmation = () => {
             :modal="true">
             <div class="flex align-items-center justify-content-center">
                 <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                <span>Al dar click en continuar su reservación será creada</span>
+                <span>Al dar click en continuar su reservación será creada. Recuerde que no podrá hacer cambios posteriormente</span>
             </div>
             <template #footer>
                 <Button label="Cancelar" icon="pi pi-times" @click="closeConfirmation" class="p-button-text" />
@@ -326,3 +318,7 @@ const openConfirmation = () => {
 
     </div>
 </template>
+
+<style scoped>
+
+</style>

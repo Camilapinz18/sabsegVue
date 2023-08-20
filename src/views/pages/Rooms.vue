@@ -20,8 +20,7 @@ const filters = ref({});
 const submitted = ref(false);
 const statuses = ref([
     { label: 'DISPONIBLE', value: 'available' },
-    { label: 'MANTENIMIENTO', value: 'maitenance' },
-    { label: 'RESERVADO', value: 'reserved' }
+    { label: 'MANTENIMIENTO', value: 'maintenance' }
 ]);
 
 
@@ -79,12 +78,19 @@ const saveRoom = () => {
 
     axios.post(config.apiUrl + `rooms`, create_data)
             .then(response => {
-                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo creado correctamente', life: 3000 });
-                products.value[findIndexById(product.value.id)] = product.value;
-                products.value.push(create_data); 
-                console.log("PRODCUTOSSSS",products.value)
-                updateProductDialog.value = false;
-                product.value = {};
+                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Sala creada correctamente', life: 3000 });
+                
+                productDialog.value = false;
+                
+
+                axios
+                    .get(config.apiUrl + 'rooms')
+                    .then(response => {
+                        products.value = response.data
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
             })
             .catch(error => {
                 console.error(error);
@@ -104,14 +110,22 @@ const updateRoom = () => {
 
     axios.put(config.apiUrl + `rooms/${product.value.id}`, update_data)
         .then(response => {
-            toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo actualizado correctamente', life: 3000 });
-            products.value[findIndexById(product.value.id)] = product.value;
-            productDialog.value = false;
-            product.value = {};
+            toast.add({ severity: 'success', summary: 'Correcto', detail: 'Sala actualizada correctamente', life: 3000 });
+            
+            axios
+                    .get(config.apiUrl + 'rooms')
+                    .then(response => {
+                        products.value = response.data
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
         })
         .catch(error => {
             console.error(error);
         });
+
+        updateProductDialog.value = false;
     
 };
 
@@ -133,7 +147,7 @@ const deleteProduct = () => {
         .then(response => {
             deleteProductDialog.value = false;
             product.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Equipo eliminado', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Correcto', detail: 'Sala eliminada', life: 3000 });
         })
         .catch(error => {
             console.error(error);
@@ -165,7 +179,7 @@ const deleteSelectedUsers = () => {
                 deleteProductsDialog.value = false;
                 selectedProducts.value = null
 
-                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipos eliminados', life: 3000 });
+                toast.add({ severity: 'success', summary: 'Correcto', detail: 'Salas eliminadas', life: 3000 });
             })
             .catch(error => {
                 console.error(error);
@@ -214,13 +228,13 @@ const initFilters = () => {
                         </div>
                     </template>
 
-                    <!-- <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+                    <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
                     <Column field="id" header="ID" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">ID</span>
                             {{ slotProps.data.id }}
                         </template>
-                    </Column> -->
+                    </Column>
                     <Column field="name" header="Sala" :sortable="true" headerStyle="width:14%; min-width:10rem;">
                         <template #body="slotProps">
                             <span class="p-column-title">Sala</span>
@@ -305,7 +319,7 @@ const initFilters = () => {
 
                     <template #footer>
                         <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
+                        <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="updateRoom" />
                     </template>
                 </Dialog>
 
@@ -355,8 +369,8 @@ const initFilters = () => {
 
 
                     <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="saveRoom" />
+                        
+                        <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="saveRoom" />
                     </template>
                 </Dialog>
 
@@ -375,7 +389,7 @@ const initFilters = () => {
                 <Dialog v-model:visible="deleteProductsDialog" :style="{ width: '450px' }" header="Confirm" :modal="true">
                     <div class="flex align-items-center justify-content-center">
                         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-                        <span v-if="product">¿Estás seguro de eliminar los equipos seleccionados?</span>
+                        <span v-if="product">¿Estás seguro de eliminar las salas seleccionadas?</span>
                     </div>
                     <template #footer>
                         <Button label="No" icon="pi pi-times" class="p-button-text" @click="deleteProductsDialog = false" />

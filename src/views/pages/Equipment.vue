@@ -20,8 +20,7 @@ const filters = ref({});
 const submitted = ref(false);
 const statuses = ref([
     { label: 'DISPONIBLE', value: 'available' },
-    { label: 'MANTENIMIENTO', value: 'maitenance' },
-    { label: 'RESERVADO', value: 'reserved' }
+    { label: 'MANTENIMIENTO', value: 'maintenance' }
 ]);
 
 
@@ -86,14 +85,23 @@ const saveEquipment = () => {
                     detail: 'Equipo creado correctamente', 
                     life: 3000 
                 });
-                products.value[findIndexById(product.value.id)] = product.value;
-                products.value.push(create_data); 
-                updateProductDialog.value = false;
-                product.value = {};
+                
+
+        axios
+        .get(config.apiUrl + 'equipments')
+        .then(response => {
+            products.value = response.data
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
             })
             .catch(error => {
                 console.error(error);
             });
+
+    productDialog.value=false
 
 };
 
@@ -105,7 +113,7 @@ const updateEquipment = () => {
         brand: product.value.brand,
         reference: product.value.reference,
         status: product.value.inventoryStatus.value,
-        category_name: product.value.category
+        category_name: product.value.category.name
     }
 
     axios.put(config.apiUrl + `equipments/${product.value.id}`, update_data)
@@ -114,10 +122,22 @@ const updateEquipment = () => {
             products.value[findIndexById(product.value.id)] = product.value;
             productDialog.value = false;
             product.value = {};
+
+            axios
+        .get(config.apiUrl + 'equipments')
+        .then(response => {
+            products.value = response.data
         })
         .catch(error => {
             console.error(error);
         });
+            
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+        updateProductDialog.value = false;
     
 };
 
@@ -139,7 +159,7 @@ const deleteProduct = () => {
         .then(response => {
             deleteProductDialog.value = false;
             product.value = {};
-            toast.add({ severity: 'success', summary: 'Successful', detail: 'Equipo eliminado', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Correcto', detail: 'Equipo eliminado', life: 3000 });
         })
         .catch(error => {
             console.error(error);
@@ -279,22 +299,27 @@ const initFilters = () => {
                         <label for="brand">Marca</label>
                         <InputText id="brand" v-model.trim="product.brand" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !product.brand }" />
+                            
                         <small class="p-invalid" v-if="submitted && !product.brand">La marca es requerida</small>
                     </div>
                     <div class="field">
                         <label for="reference">Referencia</label>
                         <InputText id="reference" v-model.trim="product.reference" required="true" autofocus
                             :class="{ 'p-invalid': submitted && !product.reference }" />
+                     
                         <small class="p-invalid" v-if="submitted && !product.reference">La referencia es requerida</small>
                     </div>
 
 
                     <div class="field">
                         <label class="mb-3">Categoría</label>
+                        
                         <div class="formgrid grid">
                             <div v-for="category in categories" :key="category.id" class="field-radiobutton col-6">
+                         
                                 <RadioButton :id="`category${category.id}`" name="category" :value="category.name"
-                                    v-model="product.category" />
+                                    v-model="product.category.name" />
+                                   
                                 <label :for="`category${category.id}`">{{ category.name }}</label>
                             </div>
                         </div>
@@ -304,8 +329,9 @@ const initFilters = () => {
 
                     <div class="field">
                         <label for="inventoryStatus" class="mb-3">Estado</label>
+                      
                         <Dropdown id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
-                            optionLabel="label" placeholder="Seleccione un estado">
+                            optionLabel="label" :placeholder=product.status>
                             <template #value="slotProps">
                                 <div v-if="slotProps.value && slotProps.value.value">
                                     <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label
@@ -324,8 +350,8 @@ const initFilters = () => {
 
 
                     <template #footer>
-                        <Button label="Cancel" icon="pi pi-times" class="p-button-text" @click="hideDialog" />
-                        <Button label="Save" icon="pi pi-check" class="p-button-text" @click="updateEquipment" />
+                        
+                        <Button label="Guardar" icon="pi pi-check" class="p-button-text" @click="updateEquipment" />
                     </template>
                 </Dialog>
 
@@ -363,7 +389,7 @@ const initFilters = () => {
                     <div class="field">
                         <label for="inventoryStatus" class="mb-3">Estado</label>
                         <Dropdown id="inventoryStatus" v-model="product.inventoryStatus" :options="statuses"
-                            optionLabel="label" placeholder="Select a Status">
+                            optionLabel="label" placeholder="Select a Status" >
                             <template #value="slotProps">
                                 <div v-if="slotProps.value && slotProps.value.value">
                                     <span :class="'product-badge status-' + slotProps.value.value">{{ slotProps.value.label

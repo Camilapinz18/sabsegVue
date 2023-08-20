@@ -16,8 +16,11 @@ const store=useTokenStore();
 
 
 const logout = () => {
+  if (window.confirm('¿Estás seguro de que deseas cerrar sesión?')) {
     store.clearToken();
+    const router = useRouter();
     router.push('/');
+  }
 };
 
 onMounted(() => {
