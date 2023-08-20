@@ -205,13 +205,7 @@ const initFilters = () => {
                             {{ slotProps.data.phone }}
                         </template>
                     </Column>
-                    <Column field="attendance" header="Asistencia" :sortable="true"
-                        headerStyle="width:14%; min-width:10rem;">
-                        <template #body="slotProps">
-                            <span class="p-column-title">Asistencia</span>
-                            {{ slotProps.data.attendance }}
-                        </template>
-                    </Column>
+                    
 
                     <Column headerStyle="min-width:10rem;">
                         <template #body="slotProps">

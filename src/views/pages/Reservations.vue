@@ -289,10 +289,8 @@ const initFilters = () => {
                         
                             <Button label="Crear reserva" icon="pi pi-plus" class="p-button-success mr-2"
                                 @click="openNew" />
-                                {{detailsDialog}}
-                                {{"hola"}}
-                            <Button label="Eliminar" icon="pi pi-trash" class="p-button-danger"
-                                @click="confirmDeleteSelected" :disabled="!selectedProducts || !selectedProducts.length" />
+
+                            
                         </div>
                     </template>
 
@@ -303,7 +301,7 @@ const initFilters = () => {
                 <Calendar :events="products">
                 
                     <template #eventDialog="props">
-                    {{props.eventDialogData}}
+                  
                         <div v-if="props.eventDialogData && props.eventDialogData.title"
                             class="p-4 flex justify-center bg-gray-200 border border-gray-400 rounded-md">
                             <div>
@@ -379,8 +377,8 @@ const initFilters = () => {
                                             <Button icon="pi pi-eye" class="p-button-rounded p-button-rounded mr-2"
                                                 @click="seeDetails(props.eventDialogData.id, props.eventDialogData.client)" />
                                           
-                                            <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                                                @click="editProduct(props.eventDialogData)" />
+                                            <!-- <Button icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
+                                                @click="editProduct(props.eventDialogData)" /> -->
                                             <Button icon="pi pi-trash" class="p-button-rounded p-button-warning mt-2"
                                                 @click="confirmDeleteProduct(props.eventDialogData.id, props)" />
                                         </div>

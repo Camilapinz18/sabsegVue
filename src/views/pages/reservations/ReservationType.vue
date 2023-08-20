@@ -100,6 +100,21 @@ const searchRoomsAndEquipments = () => {
     }
 };
 
+const toggleEquipmentsSelection = (equipment) => {
+  if (isSelected(equipment)) {
+    // Si el equipo ya está seleccionado, lo quitamos de la lista
+    selectedEquipments.value = selectedEquipments.value.filter(eq => eq !== equipment);
+  } else {
+    // Si el equipo no está seleccionado, lo añadimos a la lista
+    selectedEquipments.value.push(equipment);
+  }
+
+  console.log(selectedEquipments.value)
+};
+
+// Función para verificar si un equipo está seleccionado
+const isSelected = (equipment) => selectedEquipments.value.includes(equipment);
+
 const confirmReservation = () => {
     let equipments_ids = []
     for (let e of selectedEquipments.value) {
@@ -127,7 +142,7 @@ const confirmReservation = () => {
             continueReservation.value = false
             //showSuccess()
             alert(response.data.msg)
-            router.push('/pages/users');
+            router.push('/pages/reservations');
         })
         .catch(error => {
             console.error(error);
@@ -135,12 +150,17 @@ const confirmReservation = () => {
 }
 
 //logic method:
-const selectRoom = (index) => {
-    selectedRoom.value = index
-}
+const selectRoom = (room) => {
+  selectedRoom.value = selectedRoom.value === room ? null : room;
+  console.log(selectedRoom.value    )
+};
+
+const isSelectedRoom = (room) => selectedRoom.value === room;
 
 const selectEquipments = (index) => {
     selectedEquipments.value.push(index)
+    console.log("seleciconado equipos")
+    console.log(selectedEquipments.value)
 }
 
 const generateEndHour = () => {
@@ -215,16 +235,17 @@ const openConfirmation = () => {
                             <div class="card m-3 border-1 surface-border">
 
                                 <div class="text-center">
-                                    <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.name"
-                                        class="w-9 shadow-2 my-3 mx-0" />
+                                   
                                     <div class="text-2xl font-bold">{{ slotProps.data.name }}</div>
                                     <div class="mb-3">{{ slotProps.data.description }}</div>
 
                                 </div>
                                 <div class="flex align-items-center justify-content-between">
 
-                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto"
-                                        @click="selectRoom(slotProps.data)" />
+                                    <Button
+          :icon="isSelectedRoom(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
+          :class="{'p-button-rounded': true, 'p-button-danger': isSelectedRoom(slotProps.data), 'p-button-success': !isSelectedRoom(slotProps.data), 'mr-2': true, 'mb-2': true, 'mx-auto': true}"
+          @click="selectRoom(slotProps.data)" />
                                 </div>
                             </div>
                         </div>
@@ -244,8 +265,7 @@ const openConfirmation = () => {
                             <div class="card m-3 border-1 surface-border">
 
                                 <div class="text-center">
-                                    <img :src="'demo/images/product/' + slotProps.data.image" :alt="slotProps.data.name"
-                                        class="w-9 shadow-2 my-3 mx-0" />
+                                   
                                     <div class="text-2xl font-bold">{{ slotProps.data.brand }}</div>
                                     <div class="text-2xl font-regular">{{ slotProps.data.reference }}</div>
                                     <div class="mb-3">{{ slotProps.data.description }}</div>
@@ -253,8 +273,12 @@ const openConfirmation = () => {
                                 </div>
                                 <div class="flex align-items-center justify-content-between">
 
-                                    <Button icon="pi pi-plus" class="p-button-rounded p-button-success mr-2 mb-2 mx-auto"
-                                        @click="selectEquipments(slotProps.data)" />
+                                    <Button
+                                        :icon="isSelected(slotProps.data) ? 'pi pi-minus' : 'pi pi-plus'"
+                                        :class="{'p-button-rounded p-button-danger': isSelected(slotProps.data),
+                                                'p-button-rounded p-button-success': !isSelected(slotProps.data)}"
+                                        :mr="2" :mb="2" :mx-auto="true"
+                                        @click="toggleEquipmentsSelection(slotProps.data)" />
                                 </div>
                             </div>
                         </div>

@@ -39,7 +39,14 @@ const login=()=>{
                 router.push('/pages/users');
             })
             .catch(error => {
-                alert(error.response)
+                console.log(error.response.status)
+                if (error.response.status == 422){
+                    alert("Por favor diligencia correctamente los datos")
+                }else{
+                    alert(error.response)
+                }
+                    
+                
             });
 }
 </script>

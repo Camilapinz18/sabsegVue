@@ -206,7 +206,7 @@ const initFilters = () => {
                     responsiveLayout="scroll">
                     <template #header>
                         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                            <h5 class="m-0">Gestión de usuarios</h5>
+                            <h5 class="m-0">Gestión de salas</h5>
                             <span class="block mt-2 md:mt-0 p-input-icon-left">
                                 <i class="pi pi-search" />
                                 <InputText v-model="filters['global'].value" placeholder="Buscar..." />
@@ -225,6 +225,12 @@ const initFilters = () => {
                         <template #body="slotProps">
                             <span class="p-column-title">Sala</span>
                             {{ slotProps.data.name }}
+                        </template>
+                    </Column>
+                    <Column field="name" header="Categoría" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+                        <template #body="slotProps">
+                            <span class="p-column-title">Sala</span>
+                            {{ slotProps.data.category.name }}
                         </template>
                     </Column>
                     <Column field="phone" header="Estado" :sortable="true" headerStyle="width:14%; min-width:10rem;">
