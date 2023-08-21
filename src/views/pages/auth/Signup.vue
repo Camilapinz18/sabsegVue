@@ -92,7 +92,7 @@ const registerUser = () => {
                     </div>
                     <div class="flex flex-col items-center justify-center">
                         <span class="w-full p-3 text-xl text-center">o</span>
-                        <RouterLink to="/">
+                        <RouterLink to="/auth/login">
                             <Button label="Iniciar sesión" class="p-button-outlined"></Button>
                         </RouterLink>
                     </div>

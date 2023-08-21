@@ -3,7 +3,7 @@
     "id": 1,
     "service": "Salas de ensayo",
     "info": "Nuestro servicio de salas de ensayo ofrece un espacio seguro y equipado para que músicos de todos los niveles puedan practicar y perfeccionar sus habilidades.",
-    "image": "../../src/assets/images/ser1.jpg"
+    "image": "../src/assets/images/ser1.jpg"
   },
   {
     "id": 2,
