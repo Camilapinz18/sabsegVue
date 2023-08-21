@@ -36,12 +36,16 @@ const registerUser = () => {
             console.log(response.data);
             alert(response.data.msg);
             alert("Por favor inicie sesión")
-            router.push('/'); // Use router.push to navigate to '/account'
+            router.push('/auth/login'); // Use router.push to navigate to '/account'
         })
         .catch(error => {
-            // Handle any errors
-            console.error("ERROR",error.response.data.detail);
-            alert(error.response.data.detail)
+            console.log(error.response.status)
+                if (error.response.status == 422){
+                    alert("Por favor diligencia correctamente los datos")
+                }else if (error.response.status == 404 || error.response.status == 401 ||  error.response.status == 400){
+                    console.log(error.response.data.detail)
+                    alert(error.response.data.detail)
+                }
         });
 };
 
