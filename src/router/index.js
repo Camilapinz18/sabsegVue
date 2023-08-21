@@ -45,10 +45,8 @@ const router = createRouter({
                 
             ]
         },
-        
-
         {
-            path: '/',
+            path: '/auth/login',
             name: 'login',
             component: () => import('@/views/pages/auth/Login.vue')
         },
@@ -58,10 +56,10 @@ const router = createRouter({
             component: () => import('@/views/pages/auth/Signup.vue')
         },
         {
-            path: '/home',
+            path: '/',
             name: 'home',
             component: () => import('@/views/pages/home/HomeView.vue'),
-            meta: { requiresAuth: true, allowedRoles: ['admin','client'] } 
+           // meta: { requiresAuth: true, allowedRoles: ['admin','client'] } 
         }
     ]
 })

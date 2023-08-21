@@ -48,11 +48,11 @@ const model = ref([
         icon: 'pi pi-fw pi-briefcase',
         to: '/pages',
         items: [
-            // {
-            //     label: 'Landing',
-            //     icon: 'pi pi-fw pi-globe',
-            //     to: '/landing'
-            // },
+            {
+                label: 'Landing',
+                icon: 'pi pi-fw pi-globe',
+                to: '/landing'
+            },
             // {
             //     label: 'Auth',
             //     icon: 'pi pi-fw pi-user',

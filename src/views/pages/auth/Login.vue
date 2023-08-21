@@ -35,15 +35,16 @@ const login=()=>{
                 store.setToken({ token, role, id });
                 
 
-                alert('Inicio de sesion exitoso');
+               // alert('Inicio de sesion exitoso');
                 router.push('/pages/users');
             })
             .catch(error => {
                 console.log(error.response.status)
                 if (error.response.status == 422){
                     alert("Por favor diligencia correctamente los datos")
-                }else{
-                    alert(error.response)
+                }else if (error.response.status == 404 || error.response.status == 401){
+                    console.log(error.response.data.detail)
+                    alert(error.response.data.detail)
                 }
                     
                 
